@@ -39,7 +39,7 @@ const OTPInput = ({ getValue, inputSize = 6 }) => {
         activeInputField.focus();
 
         getValue(values.enteredValues.join(""));
-    }, [values]);
+    }, [currentActiveIndex, values, getValue]);
 
     const keyPressHandler = (event) => {
         if (event.key === "Backspace") {
