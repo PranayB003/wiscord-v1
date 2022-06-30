@@ -1,36 +1,42 @@
-import { Stack, Typography } from "@mui/material";
-import React from "react";
-import styles from "./LandingPage.module.css";
+import React, { useState } from "react";
 
-const LandingPage = () => {
+import { Button, Stack, TextField, Typography } from "@mui/material";
+import LoginForm from "../../components/LoginForm/LoginForm";
+import styles from "./LandingPage.module.css";
+import LandingGradient from "../../components/LandingGradient/LandingGradient";
+import OTPForm from "../../components/LoginForm/OTPForm";
+
+const LandingPage = ({ auth }) => {
+    const [phoneNumber, setPhoneNumber] = useState("");
+
+    const mainContent = phoneNumber ? (
+        <>
+            <Typography variant="body1" color="#FFFFFF" textAlign="center">
+                {`Please enter the 6 digit OTP sent to your mobile number ${phoneNumber}.`}
+            </Typography>
+            <OTPForm />
+        </>
+    ) : (
+        <>
+            <Typography variant="body1" color="#FFFFFF" textAlign="center">
+                Login or Register using your phone number to continue to your
+                account.
+            </Typography>
+            <LoginForm auth={auth} setData={setPhoneNumber} />
+        </>
+    );
+
     return (
         <div className={styles["container-div"]}>
-            <div
-                className={`${styles["landing-gradient-bg"]} ${styles["gradient-div"]}`}
-                styles={{
-                    display: "flex",
-                    alignItems: "center",
-                    border: "3px solid red",
-                }}
-            >
-                <Stack>
-                    <Typography textAlign="center" variant="h1" color="#FFFFFF">
-                        <b>BEST</b>
+            <LandingGradient />
+            <div className={`${styles["login-div"]}`}>
+                <Stack spacing={4} sx={{ paddingInline: "4vw" }}>
+                    <Typography variant="h4" textAlign="center" color="#FFFFFF">
+                        Welcome to WisCord!
                     </Typography>
-                    <Typography textAlign="center" variant="h4" color="#FFFFFF">
-                        <b>of</b>
-                    </Typography>
-                    <Typography variant="h1" textAlign="center" color="#FFFFFF">
-                        <b>
-                            <i>Both</i>
-                        </b>
-                    </Typography>
-                    <Typography variant="h1" color="#FFFFFF" textAlign="center">
-                        <b>Worlds</b>
-                    </Typography>
+                    {mainContent}
                 </Stack>
             </div>
-            <div className={`${styles["login-div"]}`}></div>
         </div>
     );
 };
