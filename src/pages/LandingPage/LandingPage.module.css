@@ -1,0 +1,29 @@
+.landing-gradient-bg {
+    background-color: #4158d0;
+    background-image: linear-gradient(
+        43deg,
+        #4158d0 0%,
+        #c850c0 46%,
+        #ffcc70 100%
+    );
+}
+
+.gradient-div {
+    height: 100vh;
+    width: 0vw;
+}
+
+.login-div {
+    height: 100vh;
+    width: 100vw;
+    background-color: rgb(73, 73, 78);
+}
+
+@media screen and (min-width: 765px) {
+    .gradient-div {
+        width: 50vw;
+    }
+    .login-div {
+        width: 50vw;
+    }
+}
