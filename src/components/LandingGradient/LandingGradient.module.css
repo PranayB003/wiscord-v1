@@ -16,7 +16,7 @@
     justify-content: center;
 }
 
-@media screen and (min-width: 765px) {
+@media screen and (min-width: 730px) {
     .gradient-div {
         width: 50vw;
     }

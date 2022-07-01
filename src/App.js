@@ -1,15 +1,24 @@
 import React from "react";
 
-import { app } from "./index";
+import app from "./firebase";
 import { getAuth, signOut } from "firebase/auth";
+import { getFirestore } from "firebase/firestore";
 import { useAuthState } from "react-firebase-hooks/auth";
 
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import { Backdrop, CircularProgress } from "@mui/material";
 import LandingPage from "./pages/LandingPage/LandingPage";
+import ChatRoom from "./components/Messaging/ChatRoom";
+
+const auth = getAuth(app);
+const db = getFirestore(app);
+const firebaseContextValue = {
+    auth: auth,
+    db: db,
+};
+export const FirebaseContext = React.createContext(firebaseContextValue);
 
 function App() {
-    const auth = getAuth(app);
     const [user, loading] = useAuthState(auth);
 
     let content;
@@ -20,12 +29,10 @@ function App() {
                 <button onClick={() => signOut(auth)}>Logout</button>
             </>
         );
-    } else {
-        content = <LandingPage auth={auth} />;
     }
 
     return (
-        <>
+        <FirebaseContext.Provider value={firebaseContextValue}>
             <Backdrop
                 sx={{
                     color: "#fff",
@@ -35,10 +42,20 @@ function App() {
             >
                 <CircularProgress color="inherit" />
             </Backdrop>
-            <Routes>
-                <Route path="/" element={content} />
-            </Routes>
-        </>
+            {!loading && (
+                <Routes>
+                    {!user && (
+                        <Route path="/" element={<LandingPage auth={auth} />} />
+                    )}
+                    {user && (
+                        <>
+                            <Route path="/" element={<ChatRoom />} />
+                        </>
+                    )}
+                    <Route path="*" element={<Navigate replace to="/" />} />
+                </Routes>
+            )}
+        </FirebaseContext.Provider>
     );
 }
 

@@ -14,15 +14,18 @@ const palette = {
         main: "#5666EF",
         contrastText: "#FFFFFF",
     },
-    // disabled: {
-    //     light: "#E7E7E7",
-    //     main: "#A1A1A1",
-    //     contrastText: "#FFFFFF",
-    // },
-    // error: {
-    //     main: "#F17878",
-    //     contrastText: "#FFFFFF",
-    // },
+    background: {
+        main: "#49494E",
+    },
+    disabled: {
+        light: "#E7E7E7",
+        main: "#A1A1A1",
+        contrastText: "#FFFFFF",
+    },
+    error: {
+        main: "#F17878",
+        contrastText: "#FFFFFF",
+    },
     white: {
         light: "#000000",
         main: "#FFFFFF",
