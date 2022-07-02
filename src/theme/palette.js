@@ -15,15 +15,14 @@ const palette = {
         contrastText: "#FFFFFF",
     },
     background: {
-        main: "#49494E",
+        lightGray: "rgb(54, 57, 64)",
+        gray: "rgb(48, 49, 54)",
+        darkerGray: "rgb(33, 34, 37)",
+        darkestGray: "rgb(24, 25, 28)",
     },
     disabled: {
         light: "#E7E7E7",
         main: "#A1A1A1",
-        contrastText: "#FFFFFF",
-    },
-    error: {
-        main: "#F17878",
         contrastText: "#FFFFFF",
     },
     white: {

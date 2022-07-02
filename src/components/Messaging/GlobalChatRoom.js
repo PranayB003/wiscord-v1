@@ -16,15 +16,15 @@ import MessageInput from "./MessageInput";
 import LoadingIndicator from "../LoadingIndicator";
 
 const ContainerBox = styled(Box)(({ theme }) => ({
-    backgroundColor: "#36393E",
+    backgroundColor: theme.palette.background.lightGray,
     display: "flex",
     flexDirection: "column",
-    height: "96vh",
     overflow: "hidden",
-    padding: "2vh 15px",
+    padding: "10px 12px",
+    flexGrow: "1",
 }));
 
-const ChatRoom = () => {
+const GlobalChatRoom = () => {
     const { db, auth } = useContext(FirebaseContext);
     const globalChatRef = collection(db, "globalChat");
     const chatQuery = query(
@@ -32,11 +32,9 @@ const ChatRoom = () => {
         orderBy("createdAt", "asc"),
         limit(50)
     );
-    const [data, loading, error] = useCollectionData(chatQuery, {
+    const [data, loading] = useCollectionData(chatQuery, {
         idField: "id",
     });
-
-    console.log(auth);
 
     const messageSubmitHandler = (newMessage, timeNow) => {
         const userPhoneNumber = auth.currentUser.phoneNumber;
@@ -67,7 +65,6 @@ const ChatRoom = () => {
                         const dateObj = new Date(createdAt.seconds * 1000);
                         const sender =
                             auth.currentUser.uid === uid ? "me" : phoneNumber;
-                        console.log(doc);
                         // console.log(doc.id);
 
                         return (
@@ -85,4 +82,4 @@ const ChatRoom = () => {
     );
 };
 
-export default ChatRoom;
+export default GlobalChatRoom;

@@ -53,7 +53,9 @@ const ChatMessage = ({ from, body, time }) => {
                     color="#B4B4B4"
                     paddingRight="5px"
                 >
-                    {`${time.getHours()}:${time.getMinutes()}`}
+                    {`${time.getHours()}:${("0" + time.getMinutes()).slice(
+                        -2
+                    )}`}
                 </Typography>
             </TimeBox>
         </StyledBox>
