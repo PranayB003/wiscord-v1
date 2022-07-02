@@ -14,7 +14,7 @@ const MessageBox = styled(Box, {
     shouldForwardProp: (prop) => prop !== "from",
 })(({ from, theme }) => ({
     maxWidth: "85%",
-    padding: "15px",
+    padding: "10px",
     marginBottom: "5px",
     borderRadius: from === "me" ? "15px 15px 0px 15px" : "15px 15px 15px 0px",
     background:
@@ -31,6 +31,11 @@ const ChatMessage = ({ from, body, time }) => {
     return (
         <StyledBox from={from}>
             <MessageBox from={from}>
+                {from !== "me" && (
+                    <Typography color="#FFFFFF" fontWeight="600">
+                        {from}
+                    </Typography>
+                )}
                 <Typography
                     color="#FFFFFF"
                     style={{

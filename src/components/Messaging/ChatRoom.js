@@ -39,11 +39,14 @@ const ChatRoom = () => {
     console.log(auth);
 
     const messageSubmitHandler = (newMessage, timeNow) => {
-        console.log(newMessage);
+        const userPhoneNumber = auth.currentUser.phoneNumber;
         const newDocData = {
             body: newMessage,
             createdAt: Timestamp.fromDate(timeNow),
-            phoneNumber: auth.currentUser.phoneNumber,
+            phoneNumber: `${userPhoneNumber.slice(
+                0,
+                3
+            )} ${userPhoneNumber.slice(3, 11)}XX`,
             uid: auth.currentUser.uid,
         };
         addDoc(globalChatRef, newDocData);
@@ -60,12 +63,10 @@ const ChatRoom = () => {
             >
                 {data &&
                     data.map((doc, index) => {
-                        const { body, createdAt, phoneNumber } = doc;
+                        const { body, createdAt, phoneNumber, uid } = doc;
                         const dateObj = new Date(createdAt.seconds * 1000);
                         const sender =
-                            auth.currentUser.phoneNumber === phoneNumber
-                                ? "me"
-                                : auth.currentUser.phoneNumber;
+                            auth.currentUser.uid === uid ? "me" : phoneNumber;
                         console.log(doc);
                         // console.log(doc.id);
 
