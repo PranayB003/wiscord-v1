@@ -1,60 +1,86 @@
 import React, { useContext } from "react";
 
-import { collection, query, orderBy, limit } from "firebase/firestore";
+import {
+    collection,
+    addDoc,
+    Timestamp,
+    query,
+    orderBy,
+    limit,
+} from "firebase/firestore";
 import { useCollectionData } from "react-firebase-hooks/firestore";
 import { FirebaseContext } from "../../App";
-import { Backdrop, CircularProgress, Stack } from "@mui/material";
-import styles from "./ChatRoom.module.css";
+import { Box, Stack, styled } from "@mui/material";
 import ChatMessage from "./ChatMessage";
+import MessageInput from "./MessageInput";
+import LoadingIndicator from "../LoadingIndicator";
+
+const ContainerBox = styled(Box)(({ theme }) => ({
+    backgroundColor: "#36393E",
+    display: "flex",
+    flexDirection: "column",
+    height: "96vh",
+    overflow: "hidden",
+    padding: "2vh 15px",
+}));
 
 const ChatRoom = () => {
     const { db, auth } = useContext(FirebaseContext);
     const globalChatRef = collection(db, "globalChat");
     const chatQuery = query(
         globalChatRef,
-        orderBy("createdAt", "desc"),
+        orderBy("createdAt", "asc"),
         limit(50)
     );
     const [data, loading, error] = useCollectionData(chatQuery, {
         idField: "id",
     });
 
+    console.log(auth);
+
+    const messageSubmitHandler = (newMessage, timeNow) => {
+        console.log(newMessage);
+        const newDocData = {
+            body: newMessage,
+            createdAt: Timestamp.fromDate(timeNow),
+            phoneNumber: auth.currentUser.phoneNumber,
+            uid: auth.currentUser.uid,
+        };
+        addDoc(globalChatRef, newDocData);
+    };
+
     return (
-        <div className={styles.container}>
-            <Backdrop
-                sx={{
-                    color: "#fff",
-                    zIndex: (theme) => theme.zIndex.drawer + 1,
-                }}
-                open={loading}
+        <ContainerBox>
+            <LoadingIndicator isLoading={loading} />
+            <Stack
+                spacing={2}
+                flexGrow={1}
+                overflow="auto"
+                paddingBottom="10px"
             >
-                <CircularProgress color="inherit" />
-            </Backdrop>
-            {data && (
-                <Stack
-                    spacing={2}
-                    flexGrow={1}
-                    overflow="auto"
-                    marginX="-5vw"
-                    paddingX="3vw"
-                >
-                    {data.map((doc, index) => {
-                        const { body, createdAt, userName, uid } = doc;
+                {data &&
+                    data.map((doc, index) => {
+                        const { body, createdAt, phoneNumber } = doc;
                         const dateObj = new Date(createdAt.seconds * 1000);
+                        const sender =
+                            auth.currentUser.phoneNumber === phoneNumber
+                                ? "me"
+                                : auth.currentUser.phoneNumber;
                         console.log(doc);
-                        console.log(doc.id);
-                        // return (
-                        //     <ChatMessage
-                        //         body={body}
-                        //         time={dateObj}
-                        //         from={"me"}
-                        //         key={index}
-                        //     />
-                        // );
+                        // console.log(doc.id);
+
+                        return (
+                            <ChatMessage
+                                body={body}
+                                time={dateObj}
+                                from={sender}
+                                key={index}
+                            />
+                        );
                     })}
-                </Stack>
-            )}
-        </div>
+            </Stack>
+            <MessageInput onSubmit={messageSubmitHandler} />
+        </ContainerBox>
     );
 };
 

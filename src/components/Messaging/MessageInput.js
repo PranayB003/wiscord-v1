@@ -1,34 +1,41 @@
-import React, { useRef } from "react";
+import React, { useState } from "react";
 
 import { IconButton, InputAdornment, styled, TextField } from "@mui/material";
 import { BsFillArrowUpCircleFill } from "react-icons/bs";
 
-const StyledTextField = styled((props) => <TextField {...props} />)(
-    ({ theme }) => ({
-        "& .MuiFilledInput-root": {
-            background: "#F9F9FB",
-            border: "1px solid #F2F2F2",
-            boxSizing: "border-box",
-            borderRadius: "17px",
-            padding: "10px 0",
-        },
-        "& .MuiFilledInput-input": {
-            padding: "0px 15px",
-            fontSize: theme.typography.subtitle1.fontSize,
-        },
-    })
-);
+const StyledTextField = styled(TextField)(({ theme }) => ({
+    "& .MuiFilledInput-root": {
+        boxSizing: "border-box",
+        borderRadius: "8px",
+        padding: "10px 0",
+    },
+    "& .MuiFilledInput-input": {
+        padding: "0px 15px",
+        fontSize: theme.typography.body1.fontSize,
+    },
+}));
 
 const MessageInput = ({ onSubmit }) => {
-    const messageRef = useRef();
+    const [message, setMessage] = useState("");
+
+    const changeHandler = (event) => {
+        setMessage(event.target.value);
+    };
 
     const submitHandler = (event) => {
+        setMessage("");
         const timeNow = new Date();
-        const newMessage = messageRef.current.value;
+        const newMessage = message.trim();
 
         if (newMessage === "") return;
         onSubmit(newMessage, timeNow);
-        messageRef.current.value = "";
+    };
+
+    const keyDownHandler = (event) => {
+        if (!event.shiftKey && event.key === "Enter") {
+            event.preventDefault();
+            submitHandler(event);
+        }
     };
 
     return (
@@ -44,16 +51,17 @@ const MessageInput = ({ onSubmit }) => {
                             size="large"
                             color="secondary"
                             onClick={submitHandler}
-                            type="submit"
                         >
                             <BsFillArrowUpCircleFill />
                         </IconButton>
                     </InputAdornment>
                 ),
             }}
-            inputRef={messageRef}
             multiline
             maxRows={4}
+            value={message}
+            onChange={changeHandler}
+            onKeyDown={keyDownHandler}
         />
     );
 };

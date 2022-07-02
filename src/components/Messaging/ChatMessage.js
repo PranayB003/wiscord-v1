@@ -1,12 +1,10 @@
 import React from "react";
 
 import { styled, Box, Typography } from "@mui/material";
-import { IconContext } from "react-icons";
 
 const StyledBox = styled(Box, {
     shouldForwardProp: (prop) => prop !== "from",
 })(({ from }) => ({
-    width: "100%",
     display: "flex",
     flexDirection: "column",
     alignItems: from === "me" ? "flex-end" : "flex-start",
@@ -19,7 +17,8 @@ const MessageBox = styled(Box, {
     padding: "15px",
     marginBottom: "5px",
     borderRadius: from === "me" ? "15px 15px 0px 15px" : "15px 15px 15px 0px",
-    background: from === "me" ? theme.secondary.main : "#F1F4F7",
+    background:
+        from === "me" ? theme.palette.secondary.main : "rgb(148, 21, 187)",
     overflow: "hidden",
 }));
 
@@ -31,24 +30,22 @@ const TimeBox = styled(Box)({
 const ChatMessage = ({ from, body, time }) => {
     return (
         <StyledBox from={from}>
-            {body.map((message, index) => (
-                <MessageBox key={index} from={from}>
-                    <Typography
-                        color={from === "me" ? "#FFFFFF" : "#000000"}
-                        style={{
-                            overflow: "hidden",
-                            overflowWrap: "break-word",
-                            whiteSpace: "break-spaces",
-                        }}
-                    >
-                        {message}
-                    </Typography>
-                </MessageBox>
-            ))}
+            <MessageBox from={from}>
+                <Typography
+                    color="#FFFFFF"
+                    style={{
+                        overflow: "hidden",
+                        overflowWrap: "break-word",
+                        whiteSpace: "break-spaces",
+                    }}
+                >
+                    {body}
+                </Typography>
+            </MessageBox>
             <TimeBox>
                 <Typography
                     variant="subtitle3"
-                    color={from === "me" ? "#6B779A" : "#000000"}
+                    color="#B4B4B4"
                     paddingRight="5px"
                 >
                     {`${time.getHours()}:${time.getMinutes()}`}

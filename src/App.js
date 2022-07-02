@@ -6,7 +6,7 @@ import { getFirestore } from "firebase/firestore";
 import { useAuthState } from "react-firebase-hooks/auth";
 
 import { Routes, Route, Navigate } from "react-router-dom";
-import { Backdrop, CircularProgress } from "@mui/material";
+import LoadingIndicator from "./components/LoadingIndicator";
 import LandingPage from "./pages/LandingPage/LandingPage";
 import ChatRoom from "./components/Messaging/ChatRoom";
 
@@ -33,15 +33,7 @@ function App() {
 
     return (
         <FirebaseContext.Provider value={firebaseContextValue}>
-            <Backdrop
-                sx={{
-                    color: "#fff",
-                    zIndex: (theme) => theme.zIndex.drawer + 1,
-                }}
-                open={loading}
-            >
-                <CircularProgress color="inherit" />
-            </Backdrop>
+            <LoadingIndicator isLoading={loading} />
             {!loading && (
                 <Routes>
                     {!user && (
