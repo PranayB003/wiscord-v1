@@ -100,6 +100,7 @@ const OTPInput = ({ getValue, inputSize = 6 }) => {
                     onBeforeInput={inputHandler}
                     onChange={changeHandler}
                     disabled={index !== currentActiveIndex}
+                    autoComplete="off"
                 />
             ))}
         </Stack>

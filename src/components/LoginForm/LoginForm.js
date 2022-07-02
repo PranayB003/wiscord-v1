@@ -114,6 +114,9 @@ const LoginForm = ({ auth, setData }) => {
                             </InputAdornment>
                         ),
                     }}
+                    inputProps={{
+                        autoComplete: "off",
+                    }}
                 />
                 <div ref={setRecaptchaVerifier} key={boxKey}></div>
                 <Button

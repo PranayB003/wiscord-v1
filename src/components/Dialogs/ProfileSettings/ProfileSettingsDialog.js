@@ -1,11 +1,8 @@
 import React from "react";
 
-import { Dialog, Slide } from "@mui/material";
+import { Dialog, Slide, Stack } from "@mui/material";
 import ProfileTitleBar from "./ProfileTitleBar";
-// import ListItemText from "@mui/material/ListItemText";
-// import ListItem from "@mui/material/ListItem";
-// import List from "@mui/material/List";
-// import Divider from "@mui/material/Divider";
+import ProfileDetails from "./ProfileDetails";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
@@ -24,21 +21,9 @@ const ProfileSettingsDialog = ({ open, onClose }) => {
             TransitionComponent={Transition}
         >
             <ProfileTitleBar onClose={onClose} onSave={saveHandler} />
-            {/* <List>
-                <ListItem button>
-                    <ListItemText
-                        primary="Phone ringtone"
-                        secondary="Titania"
-                    />
-                </ListItem>
-                <Divider />
-                <ListItem button>
-                    <ListItemText
-                        primary="Default notification ringtone"
-                        secondary="Tethys"
-                    />
-                </ListItem>
-            </List> */}
+            <Stack padding="15px">
+                <ProfileDetails />
+            </Stack>
         </Dialog>
     );
 };
