@@ -2,6 +2,7 @@ import React, { useState } from "react";
 
 import { Stack, Button, Collapse, Alert } from "@mui/material";
 import OTPInput from "./OTPInput";
+import getFirebaseErrorMessage from "../../utils/getFirebaseErrorMessage";
 
 const OTPForm = () => {
     const [otp, setOtp] = useState("");
@@ -10,17 +11,10 @@ const OTPForm = () => {
     const confirmHandler = () => {
         window.confirmationResult
             .confirm(otp)
-            .then((result) => {
-                const user = result.user;
-                console.log(user);
-            })
+            .then((result) => {})
             .catch((err) => {
                 console.error(err);
-                let message = err.message
-                    .split(" ")[2]
-                    .replace(/(^\([a-z]+\/|\))/g, "")
-                    .split("-")
-                    .join(" ");
+                let message = getFirebaseErrorMessage(err);
                 setError({ state: true, message });
             });
     };

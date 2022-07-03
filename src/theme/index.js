@@ -6,7 +6,7 @@ import palette from "./palette";
 let theme = createTheme({
     palette,
     // typography,
-    shape: { borderRadius: "10px", borderColor: "#FFFFFF" },
+    shape: { borderRadius: 10, borderColor: "#FFFFFF" },
 });
 
 theme = responsiveFontSizes(theme);

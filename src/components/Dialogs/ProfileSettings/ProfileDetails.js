@@ -1,7 +1,11 @@
-import React, { useContext } from "react";
+import React, { useContext, useState, useEffect } from "react";
 
-import { Box, styled, Stack, Avatar, Typography, Button } from "@mui/material";
 import { FirebaseContext } from "../../../App";
+import { useUpdateProfile, useUpdateEmail } from "react-firebase-hooks/auth";
+import { Box, styled, Stack, Snackbar, Alert } from "@mui/material";
+import ProfileDetailItem from "./ProfileDetailItem";
+import ProfilePhotoDetail from "./ProfilePhotoDetail";
+import getFirebaseErrorMessage from "../../../utils/getFirebaseErrorMessage";
 
 const DarkBox = styled(Box)(({ theme }) => ({
     backgroundColor: theme.palette.background.darkerGray,
@@ -16,83 +20,111 @@ const DarkBox = styled(Box)(({ theme }) => ({
     alignSelf: "center",
 }));
 
-const FlexDiv = styled("div")(({ theme }) => ({
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    padding: "15px",
-}));
-
 const StyledStack = styled(Stack)(({ theme }) => ({
     backgroundColor: theme.palette.background.gray,
     borderRadius: theme.shape.borderRadius,
 }));
 
-const StyledButton = styled(Button)(({ theme }) => ({
-    borderRadius: "5px",
-    backgroundColor: "rgb(79, 84, 91)",
-    color: theme.palette.text.primary,
-    "&:hover": {
-        backgroundColor: "rgb(104, 109, 114)",
-    },
-}));
-
-const ProfileDetailItem = ({ name, value }) => {
-    return (
-        <FlexDiv>
-            <Stack>
-                <Typography
-                    variant="caption"
-                    textTransform="uppercase"
-                    color="rgb(181, 184, 187)"
-                >
-                    {name}
-                </Typography>
-                <Typography variant="body2" color="text.primary">
-                    {value ||
-                        `You haven't added your ${name.toLowerCase()} yet.`}
-                </Typography>
-            </Stack>
-            <StyledButton variant="contained" disableElevation>
-                {value ? "Edit" : "Add"}
-            </StyledButton>
-        </FlexDiv>
-    );
-};
-
-const ProfileDetails = () => {
+const ProfileDetails = ({ onSave }) => {
     const { auth } = useContext(FirebaseContext);
     const { photoURL, displayName, phoneNumber, email } = auth.currentUser;
 
+    const [updateProfile, updatingProfile, profileError] =
+        useUpdateProfile(auth);
+    const [updateEmail, updatingEmail, emailError] = useUpdateEmail(auth);
+    const updating = updatingProfile || updatingEmail;
+
+    const [updateError, setUpdateError] = useState(false);
+    useEffect(() => {
+        if (profileError) {
+            let message = getFirebaseErrorMessage(profileError);
+            setUpdateError(message);
+        }
+    }, [profileError]);
+    useEffect(() => {
+        if (emailError) {
+            let message = getFirebaseErrorMessage(emailError);
+            setUpdateError(message);
+        }
+    }, [emailError]);
+    const dismissUpdateError = () => {
+        setUpdateError(null);
+    };
+
     const details = [
-        { name: "Username", value: displayName },
-        { name: "Email", value: email },
-        { name: "Phone Number", value: phoneNumber },
+        {
+            name: "Username",
+            value: displayName,
+            type: "text",
+            editable: true,
+            updateHandler: (newDisplayName) => {
+                updateProfile({
+                    displayName: newDisplayName,
+                    photoURL: photoURL,
+                });
+            },
+        },
+        {
+            name: "Email",
+            value: email,
+            type: "email",
+            editable: true,
+            updateHandler: (newEmail) => {
+                updateEmail(newEmail);
+            },
+        },
+        {
+            name: "Phone Number",
+            value: phoneNumber,
+            type: "tel",
+            editable: false,
+        },
     ];
 
     return (
-        <DarkBox>
-            <FlexDiv>
-                <Avatar
-                    alt={displayName}
-                    src={photoURL}
-                    sx={{ width: "80px", height: "80px" }}
+        <>
+            <DarkBox>
+                <ProfilePhotoDetail
+                    displayName={displayName}
+                    photoURL={photoURL}
+                    loading={updating}
+                    updateHandler={(newPhotoURL) => {
+                        return updateProfile({
+                            displayName: displayName,
+                            photoURL: newPhotoURL,
+                        });
+                    }}
                 />
-                <Typography variant="h6" fontWeight={700} color="text.primary">
-                    {displayName}
-                </Typography>
-            </FlexDiv>
-            <StyledStack>
-                {details.map((detail) => (
-                    <ProfileDetailItem
-                        key={detail.name}
-                        name={detail.name}
-                        value={detail.value}
-                    />
-                ))}
-            </StyledStack>
-        </DarkBox>
+                <StyledStack>
+                    {details.map((detail) => (
+                        <ProfileDetailItem
+                            key={detail.name}
+                            name={detail.name}
+                            value={detail.value}
+                            type={detail.type}
+                            editable={detail.editable}
+                            updateHandler={detail.updateHandler}
+                            loading={updating}
+                        />
+                    ))}
+                </StyledStack>
+            </DarkBox>
+            <Snackbar
+                open={Boolean(updateError)}
+                autoHideDuration={6000}
+                onClose={dismissUpdateError}
+            >
+                <Alert
+                    onClose={dismissUpdateError}
+                    severity="error"
+                    sx={{ width: "100%" }}
+                >
+                    {`There was an error updating your profile ${
+                        updateError ? ": " + updateError : ""
+                    }`}
+                </Alert>
+            </Snackbar>
+        </>
     );
 };
 

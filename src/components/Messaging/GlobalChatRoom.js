@@ -13,7 +13,7 @@ import { FirebaseContext } from "../../App";
 import { Box, Stack, styled } from "@mui/material";
 import ChatMessage from "./ChatMessage";
 import MessageInput from "./MessageInput";
-import LoadingIndicator from "../LoadingIndicator";
+import FullscreenCircularLoadingIndicator from "../FullscreenCircularLoadingIndicator";
 
 const ContainerBox = styled(Box)(({ theme }) => ({
     backgroundColor: theme.palette.background.lightGray,
@@ -52,7 +52,7 @@ const GlobalChatRoom = () => {
 
     return (
         <ContainerBox>
-            <LoadingIndicator isLoading={loading} />
+            <FullscreenCircularLoadingIndicator isLoading={loading} />
             <Stack
                 spacing={2}
                 flexGrow={1}
@@ -65,7 +65,6 @@ const GlobalChatRoom = () => {
                         const dateObj = new Date(createdAt.seconds * 1000);
                         const sender =
                             auth.currentUser.uid === uid ? "me" : phoneNumber;
-                        // console.log(doc.id);
 
                         return (
                             <ChatMessage

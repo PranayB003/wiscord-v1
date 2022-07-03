@@ -3,18 +3,21 @@ import React from "react";
 import app from "./firebase";
 import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
+import { getStorage } from "firebase/storage";
 import { useAuthState } from "react-firebase-hooks/auth";
 
 import { Routes, Route, Navigate } from "react-router-dom";
-import LoadingIndicator from "./components/LoadingIndicator";
+import FullscreenCircularLoadingIndicator from "./components/FullscreenCircularLoadingIndicator";
 import LandingPage from "./pages/LandingPage/LandingPage";
 import WrapperPage from "./pages/WrapperPage";
 
 const auth = getAuth(app);
 const db = getFirestore(app);
+const storage = getStorage(app);
 const firebaseContextValue = {
-    auth: auth,
-    db: db,
+    auth,
+    db,
+    storage,
 };
 export const FirebaseContext = React.createContext(firebaseContextValue);
 
@@ -23,7 +26,7 @@ function App() {
 
     return (
         <FirebaseContext.Provider value={firebaseContextValue}>
-            <LoadingIndicator isLoading={loading} />
+            <FullscreenCircularLoadingIndicator isLoading={loading} />
             {!loading && (
                 <Routes>
                     {user ? (

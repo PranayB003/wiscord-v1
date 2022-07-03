@@ -27,9 +27,6 @@ const LoginForm = ({ auth, setData }) => {
                 element,
                 {
                     size: "invisible",
-                    callback: (response) => {
-                        console.log("captcha passed");
-                    },
                 },
                 auth
             );

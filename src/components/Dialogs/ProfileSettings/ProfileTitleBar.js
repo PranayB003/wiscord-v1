@@ -1,7 +1,7 @@
 import React from "react";
 
-import { AppBar, IconButton, Toolbar, Typography, Button } from "@mui/material";
-import { IoCloseSharp, IoSave } from "react-icons/io5";
+import { AppBar, IconButton, Toolbar, Typography } from "@mui/material";
+import { IoCloseSharp } from "react-icons/io5";
 
 const ProfileTitleBar = ({ onClose, onSave }) => {
     return (
@@ -22,15 +22,6 @@ const ProfileTitleBar = ({ onClose, onSave }) => {
                 >
                     Profile
                 </Typography>
-                <Button
-                    autoFocus
-                    variant="contained"
-                    color="success"
-                    onClick={onSave}
-                    startIcon={<IoSave />}
-                >
-                    Save
-                </Button>
             </Toolbar>
         </AppBar>
     );

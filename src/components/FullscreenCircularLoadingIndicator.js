@@ -2,7 +2,7 @@ import React from "react";
 
 import { Backdrop, CircularProgress } from "@mui/material";
 
-const LoadingIndicator = ({ isLoading }) => {
+const FullscreenCircularLoadingIndicator = ({ isLoading }) => {
     return (
         <Backdrop
             sx={{
@@ -16,4 +16,4 @@ const LoadingIndicator = ({ isLoading }) => {
     );
 };
 
-export default LoadingIndicator;
+export default FullscreenCircularLoadingIndicator;
