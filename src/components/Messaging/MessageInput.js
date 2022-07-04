@@ -24,7 +24,7 @@ const MessageInput = ({ onSubmit }) => {
 
     const submitHandler = (event) => {
         setMessage("");
-        const timeNow = new Date();
+        // const timeNow = new Date();
         const newMessage = message.trim();
 
         if (newMessage === "") return;

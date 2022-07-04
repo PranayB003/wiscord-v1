@@ -80,15 +80,15 @@ const GlobalChatRoom = () => {
         console.log(res);
     };
 
-    // useEffect(() => {
-    //     const children = messageListRef.current.children;
-    //     const lastChildElement = children[children.length - 1];
-    //     if (lastChildElement) {
-    //         lastChildElement.scrollIntoView({
-    //             behaviour: "smooth",
-    //         });
-    //     }
-    // }, [data]);
+    useEffect(() => {
+        const children = messageListRef.current.children;
+        const lastChildElement = children[children.length - 1];
+        if (lastChildElement) {
+            lastChildElement.scrollIntoView({
+                behaviour: "smooth",
+            });
+        }
+    }, [data]);
 
     const chatData = data ? getDateWise(data) : undefined;
     console.log(chatData);
