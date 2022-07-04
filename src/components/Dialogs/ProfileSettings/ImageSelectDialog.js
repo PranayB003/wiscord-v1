@@ -17,9 +17,11 @@ import {
     Stack,
     Snackbar,
     Alert,
+    LinearProgress,
 } from "@mui/material";
 import { BsImageFill } from "react-icons/bs";
 import getFirebaseErrorMessage from "../../../utils/getFirebaseErrorMessage.js";
+import useFbDownloadURL from "../../../hooks/useFbDownloadUrl.js";
 
 const StyledDialogContent = styled(DialogContent)(({ theme }) => ({
     display: "flex",
@@ -39,15 +41,19 @@ const FileInput = styled("input")(() => ({
 }));
 
 const ImageSelectDialog = ({ open, onClose, onUpdate }) => {
+    // TODO: Add option to delete profile image
     const { auth, storage } = useContext(FirebaseContext);
 
     const [uploadedImage, setUploadedImage] = useState(null);
     const [errorMessage, setErrorMessage] = useState("");
     const [uploadFile, uploading, snapshot, uploadError] = useUploadFile();
+    const [downloadURL, downloading, downloadError] = useFbDownloadURL();
 
     const closeHandler = () => {
-        setUploadedImage(null);
-        onClose();
+        if (!uploading) {
+            setUploadedImage(null);
+            onClose();
+        }
     };
 
     const imageSelectHandler = (event) => {
@@ -71,12 +77,11 @@ const ImageSelectDialog = ({ open, onClose, onUpdate }) => {
                 contentType: "image/*",
             });
             console.log(res);
-            getDownloadURL(storageRef)
-                .then((url) => {
-                    onUpdate(url);
-                    closeHandler();
-                })
-                .catch((err) => console.error(err));
+            const url = await downloadURL(storageRef);
+            if (url) {
+                onUpdate(url);
+                closeHandler();
+            }
         }
     };
 
@@ -127,39 +132,44 @@ const ImageSelectDialog = ({ open, onClose, onUpdate }) => {
                                 e.target.click();
                         }}
                     >
-                        Choose image
+                        Select
                     </Button>
                 </Stack>
             </StyledDialogContent>
             <DialogActions>
-                <Button onClick={closeHandler} disabled={uploading}>
-                    Cancel
-                </Button>
-                <Box sx={{ position: "relative" }}>
-                    <Button
-                        color="secondary"
-                        variant="contained"
-                        onClick={uploadHandler}
-                        disabled={!uploadedImage || uploading}
-                    >
-                        Continue
-                    </Button>
-                    {uploading && (
-                        <CircularProgress
-                            size={24}
-                            variant="determinate"
-                            value={progress}
-                            sx={{
-                                color: "success",
-                                position: "absolute",
-                                top: "50%",
-                                left: "50%",
-                                marginTop: "-12px",
-                                marginLeft: "-12px",
-                            }}
-                        />
-                    )}
-                </Box>
+                <Stack spacing={1} width="100%">
+                    <Stack direction="row" spacing={1} alignSelf="end">
+                        <Button onClick={closeHandler} disabled={uploading}>
+                            Cancel
+                        </Button>
+                        <Box sx={{ position: "relative" }}>
+                            <Button
+                                color="secondary"
+                                variant="contained"
+                                onClick={uploadHandler}
+                                disabled={!uploadedImage || uploading}
+                            >
+                                Continue
+                            </Button>
+                            {uploading && (
+                                <CircularProgress
+                                    size={24}
+                                    variant="determinate"
+                                    value={Math.min(progress, 85)}
+                                    sx={{
+                                        color: "success",
+                                        position: "absolute",
+                                        top: "50%",
+                                        left: "50%",
+                                        marginTop: "-12px",
+                                        marginLeft: "-12px",
+                                    }}
+                                />
+                            )}
+                        </Box>
+                    </Stack>
+                    {downloading && <LinearProgress />}
+                </Stack>
             </DialogActions>
             <Snackbar
                 open={Boolean(errorMessage)}

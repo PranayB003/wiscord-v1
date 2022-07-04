@@ -64,6 +64,9 @@ const WrapperPage = () => {
                         onMenuOpen={() => setSideBarOpen(true)}
                         accountOptions={accountOptions}
                     />
+                    {/* TODO: Separate messages by date */}
+                    {/* TODO: Set a better color for incoming messages */}
+                    {/* TODO: Include image avatar beside message box */}
                     <GlobalChatRoom />
                 </MainContentStack>
             </WrapperStack>
