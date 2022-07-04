@@ -61,8 +61,17 @@ const ProfilePhotoDetail = ({
                         />
                     </Badge>
                 )}
-                <Typography variant="h6" fontWeight={700} color="text.primary">
-                    {loading ? <Skeleton width={200} /> : displayName}
+                <Typography
+                    variant="h6"
+                    fontWeight={700}
+                    color="text.primary"
+                    position="relative"
+                    flexGrow="1"
+                    paddingLeft="10px"
+                    display="flex"
+                    justifyContent="flex-end"
+                >
+                    {loading ? <Skeleton width="50%" /> : displayName}
                 </Typography>
             </FlexDiv>
             <ImageSelectDialog

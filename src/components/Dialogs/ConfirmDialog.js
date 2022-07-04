@@ -9,7 +9,15 @@ import {
     Button,
 } from "@mui/material";
 
-const LogoutDialog = ({ open, onClose, onLogout }) => {
+const ConfirmDialog = ({
+    open,
+    onClose,
+    onConfirm,
+    display = {
+        title: "Confirm ?",
+        message: "",
+    },
+}) => {
     return (
         <Dialog
             open={open}
@@ -17,17 +25,17 @@ const LogoutDialog = ({ open, onClose, onLogout }) => {
             aria-labelledby="log-out"
             aria-describedby="log-out-confirmation"
         >
-            <DialogTitle id="alert-dialog-title">{"Log Out"}</DialogTitle>
+            <DialogTitle id="alert-dialog-title">{display.title}</DialogTitle>
             <DialogContent>
                 <DialogContentText id="alert-dialog-description">
-                    Are you sure you want to log out?
+                    {display.message}
                 </DialogContentText>
             </DialogContent>
             <DialogActions>
                 <Button onClick={onClose}>No</Button>
                 <Button
                     onClick={() => {
-                        onLogout();
+                        onConfirm();
                     }}
                     autoFocus
                     variant="contained"
@@ -40,4 +48,4 @@ const LogoutDialog = ({ open, onClose, onLogout }) => {
     );
 };
 
-export default LogoutDialog;
+export default ConfirmDialog;

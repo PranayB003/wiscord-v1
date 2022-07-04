@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useRef } from "react";
 
 import {
     collection,
@@ -20,12 +20,17 @@ const ContainerBox = styled(Box)(({ theme }) => ({
     display: "flex",
     flexDirection: "column",
     overflow: "hidden",
-    padding: "10px 12px",
+    paddingBlock: "10px",
     flexGrow: "1",
 }));
 
 const GlobalChatRoom = () => {
+    /* TODO: Separate messages by date */
+    /* TODO: Set a better color for incoming messages */
+    /* TODO: Include image avatar beside message box */
     const { db, auth } = useContext(FirebaseContext);
+    const messageListRef = useRef(null);
+
     const globalChatRef = collection(db, "globalChat");
     const chatQuery = query(
         globalChatRef,
@@ -50,15 +55,27 @@ const GlobalChatRoom = () => {
         addDoc(globalChatRef, newDocData);
     };
 
+    const StyledStack = styled(Stack)(({ theme }) => ({
+        flexGrow: "1",
+        overflow: "auto",
+        marginBottom: "10px",
+        paddingInline: "12px",
+    }));
+
+    useEffect(() => {
+        const children = messageListRef.current.children;
+        const lastChildElement = children[children.length - 1];
+        if (lastChildElement) {
+            lastChildElement.scrollIntoView({
+                behaviour: "smooth",
+            });
+        }
+    }, [data]);
+
     return (
         <ContainerBox>
             <FullscreenCircularLoadingIndicator isLoading={loading} />
-            <Stack
-                spacing={2}
-                flexGrow={1}
-                overflow="auto"
-                paddingBottom="10px"
-            >
+            <StyledStack spacing={2} ref={messageListRef}>
                 {data &&
                     data.map((doc, index) => {
                         const { body, createdAt, phoneNumber, uid } = doc;
@@ -75,8 +92,10 @@ const GlobalChatRoom = () => {
                             />
                         );
                     })}
-            </Stack>
-            <MessageInput onSubmit={messageSubmitHandler} />
+            </StyledStack>
+            <Box sx={{ paddingInline: "12px" }}>
+                <MessageInput onSubmit={messageSubmitHandler} />
+            </Box>
         </ContainerBox>
     );
 };

@@ -7,10 +7,11 @@ import { Backdrop, Stack, styled, Typography } from "@mui/material";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { CgProfile } from "react-icons/cg";
 import { IoPower } from "react-icons/io5";
+
 import GlobalChatRoom from "../components/Messaging/GlobalChatRoom";
 import SideBar from "../components/SideBar";
 import TopAppBar from "../components/TopAppBar";
-import LogoutDialog from "../components/Dialogs/LogoutDialog";
+import ConfirmDialog from "../components/Dialogs/ConfirmDialog";
 import ProfileSettingsDialog from "../components/Dialogs/ProfileSettings/ProfileSettingsDialog";
 
 const WrapperStack = styled(Stack)(({ theme }) => ({
@@ -28,19 +29,30 @@ const WrapperPage = () => {
     const isMobile = useMediaQuery("(max-width:600px)");
     const { auth } = useContext(FirebaseContext);
     const [sideBarOpen, setSideBarOpen] = useState(false);
-    const [logoutDialogOpen, setLogoutDialogOpen] = useState(false);
+    const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
     const [profileDialogOpen, setProfileDialogOpen] = useState(false);
+
+    const toggleProfileDialog = () => {
+        setProfileDialogOpen((value) => !value);
+    };
+    const toggleLogoutDialog = () => {
+        setConfirmDialogOpen((value) => !value);
+    };
+    const logoutConfirmHandler = () => {
+        setConfirmDialogOpen(false);
+        signOut(auth);
+    };
 
     const accountOptions = [
         {
             name: "Profile",
             icon: <CgProfile />,
-            action: () => setProfileDialogOpen(true),
+            action: toggleProfileDialog,
         },
         {
-            name: "Logout",
+            name: "Log Out",
             icon: <IoPower />,
-            action: () => setLogoutDialogOpen(true),
+            action: toggleLogoutDialog,
         },
     ];
 
@@ -64,23 +76,22 @@ const WrapperPage = () => {
                         onMenuOpen={() => setSideBarOpen(true)}
                         accountOptions={accountOptions}
                     />
-                    {/* TODO: Separate messages by date */}
-                    {/* TODO: Set a better color for incoming messages */}
-                    {/* TODO: Include image avatar beside message box */}
                     <GlobalChatRoom />
                 </MainContentStack>
             </WrapperStack>
-            <LogoutDialog
-                open={logoutDialogOpen}
-                onClose={() => setLogoutDialogOpen(false)}
-                onLogout={() => {
-                    setLogoutDialogOpen(false);
-                    signOut(auth);
+            <ConfirmDialog
+                open={confirmDialogOpen}
+                onClose={toggleLogoutDialog}
+                onConfirm={logoutConfirmHandler}
+                display={{
+                    title: "Log Out?",
+                    message: "Are you sure you want to log out?",
                 }}
             />
             <ProfileSettingsDialog
                 open={profileDialogOpen}
-                onClose={() => setProfileDialogOpen(false)}
+                onClose={toggleProfileDialog}
+                onLogout={toggleLogoutDialog}
             />
         </>
     );

@@ -3,7 +3,7 @@ import React from "react";
 import { AppBar, IconButton, Toolbar, Typography } from "@mui/material";
 import { IoCloseSharp } from "react-icons/io5";
 
-const ProfileTitleBar = ({ onClose, onSave }) => {
+const ProfileTitleBar = ({ onClose }) => {
     return (
         <AppBar sx={{ position: "relative" }}>
             <Toolbar>

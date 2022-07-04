@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from "react";
 
 import { Stack, styled } from "@mui/material";
+import useMediaQuery from "@mui/material/useMediaQuery";
 
-const StyledInput = styled("input")(({ disabled, theme }) => ({
-    maxWidth: "40px",
-    minWidth: "30px",
+const StyledInput = styled("input", {
+    shouldForwardProp: (prop) => prop !== "small",
+})(({ small, disabled, theme }) => ({
+    maxWidth: small ? "30px" : "40px",
+    minWidth: small ? "25px" : "30px",
     outline: "none",
     border: "none",
     borderBottom: `1px solid ${
@@ -23,6 +26,7 @@ const StyledInput = styled("input")(({ disabled, theme }) => ({
     the currently entered OTP as its only argument, inputSize specifies digits in OTP
 */
 const OTPInput = ({ getValue, inputSize = 6 }) => {
+    const isSmallMobile = useMediaQuery("(max-width:375px)");
     const [values, setValues] = useState({
         prevActiveIndex: 0,
         enteredValues: Array(inputSize).fill(""),
@@ -101,6 +105,7 @@ const OTPInput = ({ getValue, inputSize = 6 }) => {
                     onChange={changeHandler}
                     disabled={index !== currentActiveIndex}
                     autoComplete="off"
+                    small={isSmallMobile}
                 />
             ))}
         </Stack>

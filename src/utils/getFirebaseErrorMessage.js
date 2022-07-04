@@ -1,7 +1,6 @@
 const getFirebaseErrorMessage = (err) => {
-    let message = err.message
-        .split(" ")[2]
-        .replace(/(^\([a-z]+\/|\))/g, "")
+    let message = err.code
+        .replace(/(^[a-z]+\/)/g, "")
         .split("-")
         .join(" ");
 

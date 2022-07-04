@@ -73,10 +73,9 @@ const ImageSelectDialog = ({ open, onClose, onUpdate }) => {
             `profileImages/${auth.currentUser.uid}`
         );
         if (uploadedImage) {
-            const res = await uploadFile(storageRef, uploadedImage.file, {
+            await uploadFile(storageRef, uploadedImage.file, {
                 contentType: "image/*",
             });
-            console.log(res);
             const url = await downloadURL(storageRef);
             if (url) {
                 onUpdate(url);
@@ -94,6 +93,11 @@ const ImageSelectDialog = ({ open, onClose, onUpdate }) => {
             setErrorMessage(getFirebaseErrorMessage(uploadError));
         }
     }, [uploadError]);
+    useEffect(() => {
+        if (downloadError) {
+            setErrorMessage(getFirebaseErrorMessage(downloadError));
+        }
+    }, [downloadError]);
 
     const progress = snapshot
         ? (snapshot.bytesTransferred / snapshot.totalBytes) * 100
@@ -131,6 +135,7 @@ const ImageSelectDialog = ({ open, onClose, onUpdate }) => {
                             if (e.key === " " || e.key === "Enter")
                                 e.target.click();
                         }}
+                        disabled={uploading}
                     >
                         Select
                     </Button>
@@ -176,15 +181,13 @@ const ImageSelectDialog = ({ open, onClose, onUpdate }) => {
                 autoHideDuration={6000}
                 onClose={dismissError}
             >
-                {uploadError && (
-                    <Alert
-                        severity="error"
-                        onClose={dismissError}
-                        sx={{ width: "100%" }}
-                    >
-                        {`Error uploading image`}
-                    </Alert>
-                )}
+                <Alert
+                    severity="error"
+                    onClose={dismissError}
+                    sx={{ width: "100%" }}
+                >
+                    {`Error: ${errorMessage}`}
+                </Alert>
             </Snackbar>
         </Dialog>
     );

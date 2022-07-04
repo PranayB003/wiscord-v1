@@ -1,8 +1,7 @@
-import React, { useContext, useState, useEffect } from "react";
+import React, { useEffect } from "react";
 
-import { FirebaseContext } from "../../../App";
 import { useUpdateProfile, useUpdateEmail } from "react-firebase-hooks/auth";
-import { Box, styled, Stack, Snackbar, Alert } from "@mui/material";
+import { Box, styled, Stack } from "@mui/material";
 import ProfileDetailItem from "./ProfileDetailItem";
 import ProfilePhotoDetail from "./ProfilePhotoDetail";
 import getFirebaseErrorMessage from "../../../utils/getFirebaseErrorMessage";
@@ -25,32 +24,26 @@ const StyledStack = styled(Stack)(({ theme }) => ({
     borderRadius: theme.shape.borderRadius,
 }));
 
-const ProfileDetails = ({ onSave }) => {
-    const { auth } = useContext(FirebaseContext);
-    const { photoURL, displayName, phoneNumber, email } = auth.currentUser;
-
+const ProfileDetails = ({ auth, onError }) => {
     const [updateProfile, updatingProfile, profileError] =
         useUpdateProfile(auth);
     const [updateEmail, updatingEmail, emailError] = useUpdateEmail(auth);
     const updating = updatingProfile || updatingEmail;
 
-    const [updateError, setUpdateError] = useState(false);
     useEffect(() => {
         if (profileError) {
             let message = getFirebaseErrorMessage(profileError);
-            setUpdateError(message);
+            onError(message);
         }
-    }, [profileError]);
+    }, [profileError, onError]);
     useEffect(() => {
         if (emailError) {
             let message = getFirebaseErrorMessage(emailError);
-            setUpdateError(message);
+            onError(message);
         }
-    }, [emailError]);
-    const dismissUpdateError = () => {
-        setUpdateError(null);
-    };
+    }, [emailError, onError]);
 
+    const { photoURL, displayName, phoneNumber, email } = auth.currentUser;
     const details = [
         {
             name: "Username",
@@ -75,56 +68,39 @@ const ProfileDetails = ({ onSave }) => {
         },
         {
             name: "Phone Number",
-            value: phoneNumber,
+            value: `${phoneNumber.slice(0, 3)} ${phoneNumber.slice(3)}`,
             type: "tel",
             editable: false,
         },
     ];
 
     return (
-        <>
-            <DarkBox>
-                <ProfilePhotoDetail
-                    displayName={displayName}
-                    photoURL={photoURL}
-                    loading={updating}
-                    updateHandler={(newPhotoURL) => {
-                        return updateProfile({
-                            displayName: displayName,
-                            photoURL: newPhotoURL,
-                        });
-                    }}
-                />
-                <StyledStack>
-                    {details.map((detail) => (
-                        <ProfileDetailItem
-                            key={detail.name}
-                            name={detail.name}
-                            value={detail.value}
-                            type={detail.type}
-                            editable={detail.editable}
-                            updateHandler={detail.updateHandler}
-                            loading={updating}
-                        />
-                    ))}
-                </StyledStack>
-            </DarkBox>
-            <Snackbar
-                open={Boolean(updateError)}
-                autoHideDuration={6000}
-                onClose={dismissUpdateError}
-            >
-                <Alert
-                    onClose={dismissUpdateError}
-                    severity="error"
-                    sx={{ width: "100%" }}
-                >
-                    {`There was an error updating your profile ${
-                        updateError ? ": " + updateError : ""
-                    }`}
-                </Alert>
-            </Snackbar>
-        </>
+        <DarkBox>
+            <ProfilePhotoDetail
+                displayName={displayName}
+                photoURL={photoURL}
+                loading={updating}
+                updateHandler={(newPhotoURL) => {
+                    return updateProfile({
+                        displayName: displayName,
+                        photoURL: newPhotoURL,
+                    });
+                }}
+            />
+            <StyledStack>
+                {details.map((detail) => (
+                    <ProfileDetailItem
+                        key={detail.name}
+                        name={detail.name}
+                        value={detail.value}
+                        type={detail.type}
+                        editable={detail.editable}
+                        updateHandler={detail.updateHandler}
+                        loading={updating}
+                    />
+                ))}
+            </StyledStack>
+        </DarkBox>
     );
 };
 

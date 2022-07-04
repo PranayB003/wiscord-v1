@@ -12,6 +12,7 @@ import {
 } from "@mui/material";
 import { RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
 import useLoadingBackdrop from "../../hooks/useLoadingBackdrop";
+import getFirebaseErrorMessage from "../../utils/getFirebaseErrorMessage";
 
 const LoginForm = ({ auth, setData }) => {
     const [phoneNumber, setPhoneNumber] = useState("");
@@ -44,21 +45,11 @@ const LoginForm = ({ auth, setData }) => {
                 setData(data);
             })
             .catch((error) => {
-                console.error(error);
-                if (error.message.match("(auth/invalid-phone-number)")) {
-                    // invalid phone number
-                    setError({ state: true, message: "Invalid phone number." });
-                } else if (error.message.match("(auth/too-many-requests)")) {
-                    setError({
-                        state: true,
-                        message: "Too many requests, please try again later.",
-                    });
-                } else {
-                    setError({
-                        state: true,
-                        message: "Something went wrong, please try again.",
-                    });
-                }
+                let code = getFirebaseErrorMessage(error);
+                setError({
+                    state: true,
+                    message: `Error: ${code}.`,
+                });
                 window.recaptchaVerifier.render().then((widgetID) => {
                     grecaptcha.reset(widgetID);
                 });

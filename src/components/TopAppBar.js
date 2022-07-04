@@ -78,7 +78,7 @@ const TopAppBar = ({ auth, title, onMenuOpen, accountOptions }) => {
                     </Box> */}
 
                     <Box sx={{ flexGrow: 0 }}>
-                        <Tooltip title="Account Options">
+                        <Tooltip title="Options">
                             <IconButton
                                 onClick={handleOpenUserMenu}
                                 sx={{ p: 0 }}
