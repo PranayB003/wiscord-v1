@@ -5,12 +5,19 @@ const getDateWise = (inputArray) => {
 
     let previousDate = null;
     inputArray.forEach((data) => {
-        const currentDate = new Date(data.createdAt * 1000);
+        const createdAt = data.createdAt;
+        const currentDate = createdAt
+            ? new Date(createdAt.seconds * 1000)
+            : new Date();
+        const newData = {
+            ...data,
+            createdAt: currentDate,
+        };
         if (sameDayOfYear(currentDate, previousDate)) {
             const lastIndex = result.length - 1;
-            result[lastIndex].push(data);
+            result[lastIndex].push(newData);
         } else {
-            result.push([data]);
+            result.push([newData]);
         }
         previousDate = currentDate;
     });

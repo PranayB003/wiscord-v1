@@ -90,9 +90,6 @@ const GlobalChatRoom = () => {
     }, [data]);
 
     const chatData = data ? getDateWise(data) : undefined;
-    console.log(chatData);
-
-    // FIXMe: fix null-date behaviour on message send
 
     return (
         <ContainerBox>
@@ -100,9 +97,7 @@ const GlobalChatRoom = () => {
             <StyledStack spacing={2} ref={messageListRef}>
                 {data &&
                     chatData.map((messages) => {
-                        const date = new Date(
-                            messages[0].createdAt.seconds * 1000
-                        );
+                        const date = messages[0].createdAt;
                         const formattedDate = sameDayOfYear(new Date(), date)
                             ? "Today"
                             : getFormattedDate(date);
@@ -110,7 +105,7 @@ const GlobalChatRoom = () => {
                         const messagesJSX = messages.map((message) => {
                             const { id, body, createdAt, phoneNumber, uid } =
                                 message;
-                            const dateObj = new Date(createdAt * 1000);
+                            const dateObj = createdAt;
                             const sender =
                                 auth.currentUser.uid === uid
                                     ? "me"
