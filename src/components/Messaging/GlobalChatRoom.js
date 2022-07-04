@@ -3,14 +3,17 @@ import React, { useContext, useEffect, useRef } from "react";
 import {
     collection,
     addDoc,
-    Timestamp,
+    serverTimestamp,
     query,
     orderBy,
     limit,
 } from "firebase/firestore";
 import { useCollectionData } from "react-firebase-hooks/firestore";
 import { FirebaseContext } from "../../App";
+import messageConverter from "../../utils/messageConverter";
+
 import { Box, Stack, styled } from "@mui/material";
+
 import ChatMessage from "./ChatMessage";
 import MessageInput from "./MessageInput";
 import FullscreenCircularLoadingIndicator from "../FullscreenCircularLoadingIndicator";
@@ -24,6 +27,13 @@ const ContainerBox = styled(Box)(({ theme }) => ({
     flexGrow: "1",
 }));
 
+const StyledStack = styled(Stack)(({ theme }) => ({
+    flexGrow: "1",
+    overflow: "auto",
+    marginBottom: "10px",
+    paddingInline: "12px",
+}));
+
 const GlobalChatRoom = () => {
     /* TODO: Separate messages by date */
     /* TODO: Set a better color for incoming messages */
@@ -31,21 +41,21 @@ const GlobalChatRoom = () => {
     const { db, auth } = useContext(FirebaseContext);
     const messageListRef = useRef(null);
 
-    const globalChatRef = collection(db, "globalChat");
+    const globalChatRef = collection(db, "globalChat").withConverter(
+        messageConverter
+    );
     const chatQuery = query(
         globalChatRef,
         orderBy("createdAt", "asc"),
         limit(50)
     );
-    const [data, loading] = useCollectionData(chatQuery, {
-        idField: "id",
-    });
+    const [data, loading] = useCollectionData(chatQuery);
 
-    const messageSubmitHandler = (newMessage, timeNow) => {
+    const messageSubmitHandler = (newMessage) => {
         const userPhoneNumber = auth.currentUser.phoneNumber;
         const newDocData = {
             body: newMessage,
-            createdAt: Timestamp.fromDate(timeNow),
+            createdAt: serverTimestamp(),
             phoneNumber: `${userPhoneNumber.slice(
                 0,
                 3
@@ -54,13 +64,6 @@ const GlobalChatRoom = () => {
         };
         addDoc(globalChatRef, newDocData);
     };
-
-    const StyledStack = styled(Stack)(({ theme }) => ({
-        flexGrow: "1",
-        overflow: "auto",
-        marginBottom: "10px",
-        paddingInline: "12px",
-    }));
 
     useEffect(() => {
         const children = messageListRef.current.children;
@@ -78,8 +81,8 @@ const GlobalChatRoom = () => {
             <StyledStack spacing={2} ref={messageListRef}>
                 {data &&
                     data.map((doc, index) => {
-                        const { body, createdAt, phoneNumber, uid } = doc;
-                        const dateObj = new Date(createdAt.seconds * 1000);
+                        const { id, body, createdAt, phoneNumber, uid } = doc;
+                        const dateObj = new Date(createdAt * 1000);
                         const sender =
                             auth.currentUser.uid === uid ? "me" : phoneNumber;
 
@@ -88,7 +91,7 @@ const GlobalChatRoom = () => {
                                 body={body}
                                 time={dateObj}
                                 from={sender}
-                                key={index}
+                                key={id}
                             />
                         );
                     })}

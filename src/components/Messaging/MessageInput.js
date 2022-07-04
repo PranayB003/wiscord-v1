@@ -28,7 +28,7 @@ const MessageInput = ({ onSubmit }) => {
         const newMessage = message.trim();
 
         if (newMessage === "") return;
-        onSubmit(newMessage, timeNow);
+        onSubmit(newMessage);
     };
 
     const keyDownHandler = (event) => {

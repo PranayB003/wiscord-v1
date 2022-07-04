@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 
-import { ref, getDownloadURL } from "firebase/storage";
+import { ref } from "firebase/storage";
 import { useUploadFile } from "react-firebase-hooks/storage";
 import { FirebaseContext } from "../../../App.js";
 
