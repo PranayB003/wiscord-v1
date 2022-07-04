@@ -19,4 +19,6 @@ jobs:
       - name: Initializing Firebase CLI
         run: npm i -g firebase-tools 
       - name: Deploying to Firebase
+        env: 
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
         run: firebase deploy --token $FIREBASE_TOKEN
