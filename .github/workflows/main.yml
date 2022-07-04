@@ -8,15 +8,15 @@ jobs:
     runs-on: ubuntu-latest
     environment: development
     steps:
-#       - uses: actions/checkout@v3
-#       - uses: actions/setup-node@v3
-#         with:
-#           node-version: 16
-#       - name: Installing dependencies
-#         run: npm i
-#       - name: Preparing build
-#         run: npm run build
-#       - name: Initializing Firebase CLI
-#         run: npm i -g firebase-tools 
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+      - name: Installing dependencies
+        run: npm i
+      - name: Preparing build
+        run: npm run build
+      - name: Initializing Firebase CLI
+        run: npm i -g firebase-tools 
       - name: Deploying to Firebase
         run: firebase deploy --token $FIREBASE_TOKEN
