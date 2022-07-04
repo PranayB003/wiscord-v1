@@ -18,4 +18,6 @@ jobs:
       - name: Initializing Firebase CLI
         run: npm i -g firebase-tools 
       - name: Deploying to Firebase
-        run: firebase deploy
+        run: |
+        firebase login
+        firebase deploy
