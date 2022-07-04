@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 
-import { ref } from "firebase/storage";
+import { ref, deleteObject } from "firebase/storage";
 import { useUploadFile } from "react-firebase-hooks/storage";
 import { FirebaseContext } from "../../../App.js";
 
@@ -41,11 +41,11 @@ const FileInput = styled("input")(() => ({
 }));
 
 const ImageSelectDialog = ({ open, onClose, onUpdate }) => {
-    // TODO: Add option to delete profile image
     const { auth, storage } = useContext(FirebaseContext);
 
     const [uploadedImage, setUploadedImage] = useState(null);
     const [errorMessage, setErrorMessage] = useState("");
+    const [deleting, setDeleting] = useState(false);
     const [uploadFile, uploading, snapshot, uploadError] = useUploadFile();
     const [downloadURL, downloading, downloadError] = useFbDownloadURL();
 
@@ -81,6 +81,20 @@ const ImageSelectDialog = ({ open, onClose, onUpdate }) => {
                 onUpdate(url);
                 closeHandler();
             }
+        } else if (auth.currentUser.photoURL) {
+            setDeleting(true);
+            try {
+                await deleteObject(storageRef);
+                onUpdate("");
+                closeHandler();
+            } catch (error) {
+                const code = getFirebaseErrorMessage(error);
+                setErrorMessage(code);
+            } finally {
+                setDeleting(false);
+            }
+        } else {
+            closeHandler();
         }
     };
 
@@ -109,11 +123,7 @@ const ImageSelectDialog = ({ open, onClose, onUpdate }) => {
             <StyledDialogContent>
                 <Avatar
                     alt={auth.currentUser.displayName}
-                    src={
-                        uploadedImage
-                            ? uploadedImage.data
-                            : auth.currentUser.photoURL
-                    }
+                    src={uploadedImage ? uploadedImage.data : null}
                     sx={{ width: "80px", height: "80px", mr: "15px" }}
                 />
                 <FileInput
@@ -152,7 +162,7 @@ const ImageSelectDialog = ({ open, onClose, onUpdate }) => {
                                 color="secondary"
                                 variant="contained"
                                 onClick={uploadHandler}
-                                disabled={!uploadedImage || uploading}
+                                disabled={uploading}
                             >
                                 Continue
                             </Button>
@@ -173,7 +183,7 @@ const ImageSelectDialog = ({ open, onClose, onUpdate }) => {
                             )}
                         </Box>
                     </Stack>
-                    {downloading && <LinearProgress />}
+                    {(downloading || deleting) && <LinearProgress />}
                 </Stack>
             </DialogActions>
             <Snackbar

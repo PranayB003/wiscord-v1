@@ -50,7 +50,6 @@ const StyledDivider = styled(Divider)(({ theme }) => ({
 const GlobalChatRoom = () => {
     /* TODO: Set a better color for incoming messages */
     /* TODO: Include image avatar beside message box */
-    console.log("rendered");
     const { db, auth } = useContext(FirebaseContext);
     const messageListRef = useRef(null);
 
@@ -75,8 +74,7 @@ const GlobalChatRoom = () => {
             )} ${userPhoneNumber.slice(3, 11)}XX`,
             uid: auth.currentUser.uid,
         };
-        const res = await addDoc(globalChatRef, newDocData);
-        console.log(res);
+        await addDoc(globalChatRef, newDocData);
     };
 
     useEffect(() => {
@@ -122,14 +120,14 @@ const GlobalChatRoom = () => {
                         });
 
                         return (
-                            <>
+                            <React.Fragment key={formattedDate}>
                                 <StyledDivider>
                                     <span className="time-content">
                                         {formattedDate}
                                     </span>
                                 </StyledDivider>
                                 {messagesJSX}
-                            </>
+                            </React.Fragment>
                         );
                     })}
             </StyledStack>
