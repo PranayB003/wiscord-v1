@@ -48,7 +48,6 @@ const StyledDivider = styled(Divider)(({ theme }) => ({
 }));
 
 const GlobalChatRoom = () => {
-    /* TODO: Separate messages by date */
     /* TODO: Set a better color for incoming messages */
     /* TODO: Include image avatar beside message box */
     console.log("rendered");
@@ -93,8 +92,7 @@ const GlobalChatRoom = () => {
     const chatData = data ? getDateWise(data) : undefined;
     console.log(chatData);
 
-    // TODO: incorrect year in dates
-    // TODO: fix null-date behaviour on message send
+    // FIXMe: fix null-date behaviour on message send
 
     return (
         <ContainerBox>
@@ -102,7 +100,9 @@ const GlobalChatRoom = () => {
             <StyledStack spacing={2} ref={messageListRef}>
                 {data &&
                     chatData.map((messages) => {
-                        const date = new Date(messages[0].createdAt * 1000);
+                        const date = new Date(
+                            messages[0].createdAt.seconds * 1000
+                        );
                         const formattedDate = sameDayOfYear(new Date(), date)
                             ? "Today"
                             : getFormattedDate(date);
@@ -137,22 +137,6 @@ const GlobalChatRoom = () => {
                             </>
                         );
                     })}
-                {/* {data &&
-                    data.map((doc) => {
-                        const { id, body, createdAt, phoneNumber, uid } = doc;
-                        const dateObj = new Date(createdAt * 1000);
-                        const sender =
-                            auth.currentUser.uid === uid ? "me" : phoneNumber;
-
-                        return (
-                            <ChatMessage
-                                body={body}
-                                time={dateObj}
-                                from={sender}
-                                key={id}
-                            />
-                        );
-                    })} */}
             </StyledStack>
             <Box sx={{ paddingInline: "12px" }}>
                 <MessageInput onSubmit={messageSubmitHandler} />
