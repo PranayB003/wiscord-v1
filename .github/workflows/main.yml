@@ -19,5 +19,5 @@ jobs:
         run: npm i -g firebase-tools 
       - name: Deploying to Firebase
         run: |
-        firebase login
-        firebase deploy
+          firebase login
+          firebase deploy
