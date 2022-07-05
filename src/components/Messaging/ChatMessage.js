@@ -63,3 +63,4 @@ const ChatMessage = ({ from, body, time }) => {
 };
 
 export default ChatMessage;
+// FIXME: weird text wrap on mobile devices

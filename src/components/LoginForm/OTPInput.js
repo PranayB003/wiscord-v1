@@ -10,7 +10,7 @@ const StyledInput = styled("input", {
     minWidth: small ? "25px" : "30px",
     outline: "none",
     border: "none",
-    borderBottom: `1px solid ${
+    borderBottom: `${disabled ? "1px" : "2px"} solid ${
         disabled ? theme.palette.text.disabled : "white"
     }`,
     paddingBlock: "15px",
@@ -97,7 +97,7 @@ const OTPInput = ({ getValue, inputSize = 6 }) => {
                 <StyledInput
                     key={index}
                     id={`otpDigit${index}`}
-                    type="text"
+                    type="tel"
                     value={value}
                     tabIndex={index === currentActiveIndex ? 0 : -1}
                     onKeyDown={keyPressHandler}

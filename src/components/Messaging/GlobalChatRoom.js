@@ -56,8 +56,8 @@ const GlobalChatRoom = () => {
     );
     const chatQuery = query(
         globalChatRef,
-        orderBy("createdAt", "asc"),
-        limit(50)
+        orderBy("createdAt", "desc"),
+        limit(200)
     );
     const [data, loading] = useCollectionData(chatQuery);
 
@@ -85,7 +85,7 @@ const GlobalChatRoom = () => {
         }
     }, [data]);
 
-    const chatData = data ? groupByTimeUser(data) : undefined;
+    const chatData = data ? groupByTimeUser(data.reverse()) : undefined;
 
     return (
         <ContainerBox>

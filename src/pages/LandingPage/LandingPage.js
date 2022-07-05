@@ -42,3 +42,4 @@ const LandingPage = ({ auth }) => {
 };
 
 export default LandingPage;
+// FIXME: prevent content shift on keyboard pop up in mobile devices
