@@ -1,6 +1,6 @@
 import sameDayOfYear from "./sameDayOfYear";
 
-const getDateWise = (inputArray) => {
+const groupByDate = (inputArray) => {
     let result = [];
 
     let previousDate = null;
@@ -25,4 +25,4 @@ const getDateWise = (inputArray) => {
     return result;
 };
 
-export default getDateWise;
+export default groupByDate;

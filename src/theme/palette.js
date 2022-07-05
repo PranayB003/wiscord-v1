@@ -10,15 +10,16 @@ const palette = {
         dark: "#FFFFFF",
     },
     secondary: {
-        light: "#6679FF",
-        main: "#5666EF",
+        light: "rgb(11, 137, 252)",
+        main: "rgb(86, 102, 239)",
+        dark: "rgb(72, 85, 199)",
         contrastText: "#FFFFFF",
     },
     background: {
         lightGray: "rgb(54, 57, 64)",
-        gray: "rgb(48, 49, 54)",
+        gray: "rgb(59, 59, 61)",
         darkerGray: "rgb(33, 34, 37)",
-        darkestGray: "rgb(24, 25, 28)",
+        darkestGray: "rgb(30, 30, 30)",
     },
     disabled: {
         light: "#E7E7E7",

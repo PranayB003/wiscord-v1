@@ -15,7 +15,7 @@ import ImageSelectDialog from "./ImageSelectDialog";
 const StyledIconButton = styled(IconButton)(({ theme }) => ({
     backgroundColor: theme.palette.secondary.main,
     "&:hover": {
-        backgroundColor: theme.palette.secondary.light,
+        backgroundColor: theme.palette.secondary.dark,
     },
 }));
 

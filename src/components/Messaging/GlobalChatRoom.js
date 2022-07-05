@@ -14,15 +14,17 @@ import { FirebaseContext } from "../../App";
 import { Box, Divider, Stack, styled } from "@mui/material";
 
 import ChatMessage from "./ChatMessage";
+import ChatMessages from "./ChatMessages";
 import MessageInput from "./MessageInput";
 import FullscreenCircularLoadingIndicator from "../FullscreenCircularLoadingIndicator";
 import messageConverter from "../../utils/messageConverter";
-import getDateWise from "../../utils/getDateWise";
+import groupByDate from "../../utils/groupByDate";
+import groupByTimeUser from "../../utils/groupByTimeUser";
 import getFormattedDate from "../../utils/getFormattedDate";
 import sameDayOfYear from "../../utils/sameDayOfYear";
 
 const ContainerBox = styled(Box)(({ theme }) => ({
-    backgroundColor: theme.palette.background.lightGray,
+    backgroundColor: theme.palette.background.darkestGray,
     display: "flex",
     flexDirection: "column",
     overflow: "hidden",
@@ -87,37 +89,37 @@ const GlobalChatRoom = () => {
         }
     }, [data]);
 
-    const chatData = data ? getDateWise(data) : undefined;
+    // const chatData = data ? groupByDate(data) : undefined;
+    const chatData = data ? groupByTimeUser(data) : undefined;
 
     return (
         <ContainerBox>
             <FullscreenCircularLoadingIndicator isLoading={loading} />
             <StyledStack spacing={2} ref={messageListRef}>
                 {data &&
-                    chatData.map((messages) => {
-                        const date = messages[0].createdAt;
+                    chatData.map((dateMessages) => {
+                        const date = dateMessages[0][0].createdAt;
                         const formattedDate = sameDayOfYear(new Date(), date)
                             ? "Today"
                             : getFormattedDate(date);
 
-                        const messagesJSX = messages.map((message) => {
-                            const { id, body, createdAt, phoneNumber, uid } =
-                                message;
-                            const dateObj = createdAt;
-                            const sender =
-                                auth.currentUser.uid === uid
-                                    ? "me"
-                                    : phoneNumber;
+                        const messagesJSX = dateMessages.map(
+                            (timeUserMessages) => {
+                                const sender =
+                                    timeUserMessages[0].uid ===
+                                    auth.currentUser.uid
+                                        ? "me"
+                                        : timeUserMessages[0].phoneNumber;
 
-                            return (
-                                <ChatMessage
-                                    body={body}
-                                    time={dateObj}
-                                    from={sender}
-                                    key={id}
-                                />
-                            );
-                        });
+                                return (
+                                    <ChatMessages
+                                        key={`sw${timeUserMessages[0].id}`}
+                                        from={sender}
+                                        messageList={timeUserMessages}
+                                    />
+                                );
+                            }
+                        );
 
                         return (
                             <React.Fragment key={formattedDate}>

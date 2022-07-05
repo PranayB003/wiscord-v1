@@ -49,7 +49,7 @@ const MessageInput = ({ onSubmit }) => {
                     <InputAdornment position="end">
                         <IconButton
                             size="large"
-                            color="secondary"
+                            color="disabled"
                             onClick={submitHandler}
                         >
                             <BsFillArrowUpCircleFill />
