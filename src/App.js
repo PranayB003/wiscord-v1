@@ -26,7 +26,9 @@ function App() {
 
     return (
         <FirebaseContext.Provider value={firebaseContextValue}>
-            <FullscreenCircularLoadingIndicator isLoading={loading} />
+            {loading && (
+                <FullscreenCircularLoadingIndicator isLoading={loading} />
+            )}
             {!loading && (
                 <Routes>
                     {user ? (

@@ -15,7 +15,6 @@ import {
     Tooltip,
 } from "@mui/material";
 // import { FiMenu } from "react-icons/fi";
-
 const TopAppBar = ({ auth, title, onMenuOpen, accountOptions }) => {
     const [anchorElUser, setAnchorElUser] = useState(null);
 
@@ -27,7 +26,7 @@ const TopAppBar = ({ auth, title, onMenuOpen, accountOptions }) => {
     };
 
     return (
-        <AppBar position="static" sx={{ borderTopLeftRadius: "10px" }}>
+        <AppBar position="fixed" sx={{ borderTopLeftRadius: "10px" }}>
             <Container maxWidth="xl">
                 <Toolbar disableGutters>
                     {/* <Box
