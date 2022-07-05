@@ -13,8 +13,8 @@ import { FirebaseContext } from "../../App";
 
 import { Box, Divider, Stack, styled } from "@mui/material";
 
-import ChatMessages from "./ChatMessages";
-import MessageInput from "./MessageInput";
+import GroupedChatMessage from "./GroupedChatMessage";
+import ChatInput from "./ChatInput";
 import FullscreenCircularLoadingIndicator from "../FullscreenCircularLoadingIndicator";
 import messageConverter from "../../utils/messageConverter";
 import groupByTimeUser from "../../utils/groupByTimeUser";
@@ -34,7 +34,7 @@ const StyledStack = styled(Stack)(({ theme }) => ({
     flexGrow: "1",
     overflow: "auto",
     marginBottom: "10px",
-    paddingInline: "12px",
+    paddingInline: "10px",
 }));
 
 const StyledDivider = styled(Divider)(({ theme }) => ({
@@ -48,7 +48,6 @@ const StyledDivider = styled(Divider)(({ theme }) => ({
 }));
 
 const GlobalChatRoom = () => {
-    /* TODO: Include image avatar beside message box */
     const { db, auth } = useContext(FirebaseContext);
     const messageListRef = useRef(null);
 
@@ -86,12 +85,13 @@ const GlobalChatRoom = () => {
         }
     }, [data]);
 
-    // const chatData = data ? groupByDate(data) : undefined;
     const chatData = data ? groupByTimeUser(data) : undefined;
 
     return (
         <ContainerBox>
-            <FullscreenCircularLoadingIndicator isLoading={loading} />
+            {loading && (
+                <FullscreenCircularLoadingIndicator isLoading={loading} />
+            )}
             <StyledStack spacing={2} ref={messageListRef}>
                 {data &&
                     chatData.map((dateMessages) => {
@@ -109,7 +109,7 @@ const GlobalChatRoom = () => {
                                         : timeUserMessages[0].phoneNumber;
 
                                 return (
-                                    <ChatMessages
+                                    <GroupedChatMessage
                                         key={`sw${timeUserMessages[0].id}`}
                                         from={sender}
                                         messageList={timeUserMessages}
@@ -131,7 +131,7 @@ const GlobalChatRoom = () => {
                     })}
             </StyledStack>
             <Box sx={{ paddingInline: "12px" }}>
-                <MessageInput onSubmit={messageSubmitHandler} />
+                <ChatInput onSubmit={messageSubmitHandler} />
             </Box>
         </ContainerBox>
     );

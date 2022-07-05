@@ -3,13 +3,13 @@ import React, { useState, useContext } from "react";
 import { FirebaseContext } from "../App";
 import { signOut } from "firebase/auth";
 
-import { Backdrop, Stack, styled, Typography } from "@mui/material";
-import useMediaQuery from "@mui/material/useMediaQuery";
+import { Stack, styled } from "@mui/material";
+// import useMediaQuery from "@mui/material/useMediaQuery";
 import { CgProfile } from "react-icons/cg";
 import { IoPower } from "react-icons/io5";
 
 import GlobalChatRoom from "../components/Messaging/GlobalChatRoom";
-import SideBar from "../components/SideBar";
+// import SideBar from "../components/SideBar";
 import TopAppBar from "../components/TopAppBar";
 import ConfirmDialog from "../components/Dialogs/ConfirmDialog";
 import ProfileSettingsDialog from "../components/Dialogs/ProfileSettings/ProfileSettingsDialog";
@@ -26,9 +26,9 @@ const MainContentStack = styled(Stack)(({ theme }) => ({
 }));
 
 const WrapperPage = () => {
-    const isMobile = useMediaQuery("(max-width:600px)");
+    // const isMobile = useMediaQuery("(max-width:600px)");
     const { auth } = useContext(FirebaseContext);
-    const [sideBarOpen, setSideBarOpen] = useState(false);
+    // const [sideBarOpen, setSideBarOpen] = useState(false);
     const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
     const [profileDialogOpen, setProfileDialogOpen] = useState(false);
 
@@ -58,22 +58,23 @@ const WrapperPage = () => {
 
     return (
         <>
-            {isMobile && (
+            {/* {isMobile && (
                 <Backdrop
                     open={sideBarOpen}
                     onClick={() => setSideBarOpen(false)}
                 >
-                    <Typography color="#FFFFFF">LMAO LMAO LMAO</Typography>
                     <SideBar />
                 </Backdrop>
-            )}
+            )} */}
             <WrapperStack direction="row" spacing={1}>
-                {!isMobile && <SideBar />}
+                {/* {!isMobile && <SideBar />} */}
                 <MainContentStack>
                     <TopAppBar
                         auth={auth}
                         title="Global Chat"
-                        onMenuOpen={() => setSideBarOpen(true)}
+                        onMenuOpen={() => {
+                            // setSideBarOpen(true)
+                        }}
                         accountOptions={accountOptions}
                     />
                     <GlobalChatRoom />

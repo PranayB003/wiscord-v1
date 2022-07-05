@@ -14,7 +14,7 @@ import {
     Avatar,
     Tooltip,
 } from "@mui/material";
-import { FiMenu } from "react-icons/fi";
+// import { FiMenu } from "react-icons/fi";
 
 const TopAppBar = ({ auth, title, onMenuOpen, accountOptions }) => {
     const [anchorElUser, setAnchorElUser] = useState(null);
@@ -30,7 +30,7 @@ const TopAppBar = ({ auth, title, onMenuOpen, accountOptions }) => {
         <AppBar position="static" sx={{ borderTopLeftRadius: "10px" }}>
             <Container maxWidth="xl">
                 <Toolbar disableGutters>
-                    <Box
+                    {/* <Box
                         sx={{
                             flexGrow: 1,
                             display: { xs: "flex", sm: "none" },
@@ -46,7 +46,7 @@ const TopAppBar = ({ auth, title, onMenuOpen, accountOptions }) => {
                         >
                             <FiMenu />
                         </IconButton>
-                    </Box>
+                    </Box> */}
                     <Typography
                         variant="h6"
                         noWrap
@@ -60,23 +60,6 @@ const TopAppBar = ({ auth, title, onMenuOpen, accountOptions }) => {
                     >
                         {title}
                     </Typography>
-                    {/* <Box
-                        sx={{
-                            flexGrow: 1,
-                            display: { xs: "none", md: "flex" },
-                        }}
-                    >
-                        {pages.map((page) => (
-                            <Button
-                                key={page}
-                                onClick={handleCloseNavMenu}
-                                sx={{ my: 2, color: "white", display: "block" }}
-                            >
-                                {page}
-                            </Button>
-                        ))}
-                    </Box> */}
-
                     <Box sx={{ flexGrow: 0 }}>
                         <Tooltip title="Options">
                             <IconButton

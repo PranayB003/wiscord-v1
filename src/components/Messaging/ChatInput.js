@@ -15,7 +15,7 @@ const StyledTextField = styled(TextField)(({ theme }) => ({
     },
 }));
 
-const MessageInput = ({ onSubmit }) => {
+const ChatInput = ({ onSubmit }) => {
     const [message, setMessage] = useState("");
 
     const changeHandler = (event) => {
@@ -66,4 +66,4 @@ const MessageInput = ({ onSubmit }) => {
     );
 };
 
-export default MessageInput;
+export default ChatInput;
