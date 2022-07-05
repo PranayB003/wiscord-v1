@@ -20,12 +20,12 @@ body {
 /* Works on Firefox */
 * {
     scrollbar-width: thin;
-    scrollbar-color: rgb(71, 71, 71) transparent;
+    scrollbar-color: rgb(113, 113, 113) transparent;
 }
 
 /* Works on Chrome, Edge, and Safari */
 *::-webkit-scrollbar {
-    width: 8px;
+    width: 7px;
 }
 
 *::-webkit-scrollbar-track {

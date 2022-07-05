@@ -13,12 +13,10 @@ import { FirebaseContext } from "../../App";
 
 import { Box, Divider, Stack, styled } from "@mui/material";
 
-import ChatMessage from "./ChatMessage";
 import ChatMessages from "./ChatMessages";
 import MessageInput from "./MessageInput";
 import FullscreenCircularLoadingIndicator from "../FullscreenCircularLoadingIndicator";
 import messageConverter from "../../utils/messageConverter";
-import groupByDate from "../../utils/groupByDate";
 import groupByTimeUser from "../../utils/groupByTimeUser";
 import getFormattedDate from "../../utils/getFormattedDate";
 import sameDayOfYear from "../../utils/sameDayOfYear";
@@ -50,7 +48,6 @@ const StyledDivider = styled(Divider)(({ theme }) => ({
 }));
 
 const GlobalChatRoom = () => {
-    /* TODO: Set a better color for incoming messages */
     /* TODO: Include image avatar beside message box */
     const { db, auth } = useContext(FirebaseContext);
     const messageListRef = useRef(null);
