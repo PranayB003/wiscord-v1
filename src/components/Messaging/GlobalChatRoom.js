@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef } from "react";
+import React, { useContext, useRef } from "react";
 
 import {
     collection,
@@ -16,6 +16,7 @@ import { Box, Divider, Stack, styled } from "@mui/material";
 import GroupedChatMessage from "./GroupedChatMessage";
 import ChatInput from "./ChatInput";
 import FullscreenCircularLoadingIndicator from "../FullscreenCircularLoadingIndicator";
+import useAutoSrollDown from "../../hooks/useAutoScrollDown";
 import messageConverter from "../../utils/messageConverter";
 import groupByTimeUser from "../../utils/groupByTimeUser";
 import getFormattedDate from "../../utils/getFormattedDate";
@@ -50,7 +51,6 @@ const StyledDivider = styled(Divider)(({ theme }) => ({
 const GlobalChatRoom = () => {
     const { db, auth } = useContext(FirebaseContext);
     const messageListRef = useRef(null);
-    console.log(messageListRef);
 
     const globalChatRef = collection(db, "globalChat").withConverter(
         messageConverter
@@ -61,6 +61,9 @@ const GlobalChatRoom = () => {
         limit(200)
     );
     const [data, loading] = useCollectionData(chatQuery);
+    const chatData = data ? groupByTimeUser(data.reverse()) : undefined;
+
+    const forceScrollDown = useAutoSrollDown(messageListRef, [chatData]);
 
     const messageSubmitHandler = async (newMessage) => {
         const userPhoneNumber = auth.currentUser.phoneNumber;
@@ -73,20 +76,9 @@ const GlobalChatRoom = () => {
             )} ${userPhoneNumber.slice(3, 11)}XX`,
             uid: auth.currentUser.uid,
         };
+        forceScrollDown();
         await addDoc(globalChatRef, newDocData);
     };
-
-    useEffect(() => {
-        const children = messageListRef.current.children;
-        const lastChildElement = children[children.length - 1];
-        if (lastChildElement) {
-            lastChildElement.scrollIntoView({
-                behaviour: "smooth",
-            });
-        }
-    }, [data]);
-
-    const chatData = data ? groupByTimeUser(data.reverse()) : undefined;
 
     return (
         <ContainerBox>
@@ -139,5 +131,3 @@ const GlobalChatRoom = () => {
 };
 
 export default GlobalChatRoom;
-// Fixme: scroll position not maintained after opening and closing profile dialog on mobile
-// fixme: prevent auto-scroll-down when user is viewing older messages
