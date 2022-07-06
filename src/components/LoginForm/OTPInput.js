@@ -112,3 +112,7 @@ const OTPInput = ({ getValue, inputSize = 6 }) => {
     );
 };
 export default OTPInput;
+
+// FIXME: allow otp copy paste
+// FIXME: manual navigation / intuitive navigation for otp fields
+// FIXME: limit otp field value to one character

@@ -26,7 +26,7 @@ const ContainerBox = styled(Box)(({ theme }) => ({
     display: "flex",
     flexDirection: "column",
     overflow: "hidden",
-    paddingBlock: "10px",
+    paddingBlock: "0 10px",
     flexGrow: "1",
 }));
 
@@ -50,6 +50,7 @@ const StyledDivider = styled(Divider)(({ theme }) => ({
 const GlobalChatRoom = () => {
     const { db, auth } = useContext(FirebaseContext);
     const messageListRef = useRef(null);
+    console.log(messageListRef);
 
     const globalChatRef = collection(db, "globalChat").withConverter(
         messageConverter
@@ -138,3 +139,5 @@ const GlobalChatRoom = () => {
 };
 
 export default GlobalChatRoom;
+// Fixme: scroll position not maintained after opening and closing profile dialog on mobile
+// fixme: prevent auto-scroll-down when user is viewing older messages

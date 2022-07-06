@@ -26,10 +26,11 @@ const TopAppBar = ({ auth, title, onMenuOpen, accountOptions }) => {
     };
 
     return (
-        <AppBar position="fixed" sx={{ borderTopLeftRadius: "10px" }}>
-            <Container maxWidth="xl">
-                <Toolbar disableGutters>
-                    {/* <Box
+        <>
+            <AppBar position="fixed" sx={{ borderTopLeftRadius: "10px" }}>
+                <Container maxWidth="xl">
+                    <Toolbar disableGutters>
+                        {/* <Box
                         sx={{
                             flexGrow: 1,
                             display: { xs: "flex", sm: "none" },
@@ -46,64 +47,70 @@ const TopAppBar = ({ auth, title, onMenuOpen, accountOptions }) => {
                             <FiMenu />
                         </IconButton>
                     </Box> */}
-                    <Typography
-                        variant="h6"
-                        noWrap
-                        sx={{
-                            mr: 2,
-                            flexGrow: 1,
-                            fontFamily: "monospace",
-                            fontWeight: 700,
-                            color: "inherit",
-                        }}
-                    >
-                        {title}
-                    </Typography>
-                    <Box sx={{ flexGrow: 0 }}>
-                        <Tooltip title="Options">
-                            <IconButton
-                                onClick={handleOpenUserMenu}
-                                sx={{ p: 0 }}
-                            >
-                                <Avatar
-                                    alt={auth.currentUser.displayName}
-                                    src={auth.currentUser.photoURL}
-                                />
-                            </IconButton>
-                        </Tooltip>
-                        <Menu
-                            sx={{ mt: "45px" }}
-                            id="menu-appbar"
-                            anchorEl={anchorElUser}
-                            anchorOrigin={{
-                                vertical: "top",
-                                horizontal: "right",
+                        <Typography
+                            variant="h6"
+                            noWrap
+                            sx={{
+                                mr: 2,
+                                flexGrow: 1,
+                                fontFamily: "monospace",
+                                fontWeight: 700,
+                                color: "inherit",
                             }}
-                            keepMounted
-                            transformOrigin={{
-                                vertical: "top",
-                                horizontal: "right",
-                            }}
-                            open={Boolean(anchorElUser)}
-                            onClose={handleCloseUserMenu}
                         >
-                            {accountOptions.map((option) => (
-                                <MenuItem
-                                    key={option.name}
-                                    onClick={() => {
-                                        handleCloseUserMenu();
-                                        option.action();
-                                    }}
+                            {title}
+                        </Typography>
+                        <Box sx={{ flexGrow: 0 }}>
+                            <Tooltip title="Options">
+                                <IconButton
+                                    onClick={handleOpenUserMenu}
+                                    sx={{ p: 0 }}
                                 >
-                                    <ListItemIcon>{option.icon}</ListItemIcon>
-                                    <ListItemText>{option.name}</ListItemText>
-                                </MenuItem>
-                            ))}
-                        </Menu>
-                    </Box>
-                </Toolbar>
-            </Container>
-        </AppBar>
+                                    <Avatar
+                                        alt={auth.currentUser.displayName}
+                                        src={auth.currentUser.photoURL}
+                                    />
+                                </IconButton>
+                            </Tooltip>
+                            <Menu
+                                sx={{ mt: "45px" }}
+                                id="menu-appbar"
+                                anchorEl={anchorElUser}
+                                anchorOrigin={{
+                                    vertical: "top",
+                                    horizontal: "right",
+                                }}
+                                keepMounted
+                                transformOrigin={{
+                                    vertical: "top",
+                                    horizontal: "right",
+                                }}
+                                open={Boolean(anchorElUser)}
+                                onClose={handleCloseUserMenu}
+                            >
+                                {accountOptions.map((option) => (
+                                    <MenuItem
+                                        key={option.name}
+                                        onClick={() => {
+                                            handleCloseUserMenu();
+                                            option.action();
+                                        }}
+                                    >
+                                        <ListItemIcon>
+                                            {option.icon}
+                                        </ListItemIcon>
+                                        <ListItemText>
+                                            {option.name}
+                                        </ListItemText>
+                                    </MenuItem>
+                                ))}
+                            </Menu>
+                        </Box>
+                    </Toolbar>
+                </Container>
+            </AppBar>
+            <Toolbar />
+        </>
     );
 };
 export default TopAppBar;

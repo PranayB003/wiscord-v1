@@ -66,7 +66,7 @@ const WrapperPage = () => {
                     <SideBar />
                 </Backdrop>
             )} */}
-            <WrapperStack direction="row" spacing={1}>
+            <WrapperStack direction="row">
                 {/* {!isMobile && <SideBar />} */}
                 <MainContentStack>
                     <TopAppBar
