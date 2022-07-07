@@ -13,7 +13,7 @@ import getFirebaseErrorMessage from "../../utils/getFirebaseErrorMessage";
 
 const OTPForm = () => {
     const [otp, setOtp] = useState("");
-    const [error, setError] = useState({ state: false, message: "" });
+    const [alert, setAlert] = useState({ state: false, message: "" });
     const [loading, setLoading] = useState(false);
 
     const confirmHandler = async () => {
@@ -23,23 +23,41 @@ const OTPForm = () => {
         } catch (err) {
             console.error(err);
             let message = getFirebaseErrorMessage(err);
-            setError({ state: true, message });
+            setAlert({ state: true, severity: "error", message });
         } finally {
             setLoading(false);
         }
     };
 
+    const manualNavigateHandler = () => {
+        setAlert({
+            state: true,
+            severity: "warning",
+            message:
+                "Use backspace to navigate backward or enter a digit to go forward.",
+        });
+    };
+
     return (
         <Stack spacing={2}>
-            <Collapse in={error.state}>
+            <Collapse in={alert.state}>
                 <Alert
-                    severity="error"
-                    onClose={() => setError({ state: false, message: "" })}
+                    severity={alert.severity}
+                    onClose={() =>
+                        setAlert((prevState) => ({
+                            state: false,
+                            severity: prevState.severity,
+                            message: "",
+                        }))
+                    }
                 >
-                    {error.message}
+                    {alert.message}
                 </Alert>
             </Collapse>
-            <OTPInput getValue={setOtp} />
+            <OTPInput
+                getValue={setOtp}
+                onManualNavigate={manualNavigateHandler}
+            />
             <Box sx={{ position: "relative" }}>
                 <Button
                     variant="contained"

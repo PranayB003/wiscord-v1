@@ -25,7 +25,7 @@ const StyledInput = styled("input", {
     getValue accepts a function which is called on every render of this component with
     the currently entered OTP as its only argument, inputSize specifies digits in OTP
 */
-const OTPInput = ({ getValue, inputSize = 6 }) => {
+const OTPInput = ({ getValue, onManualNavigate, inputSize = 6 }) => {
     const isSmallMobile = useMediaQuery("(max-width:375px)");
     const [values, setValues] = useState({
         prevActiveIndex: 0,
@@ -91,22 +91,29 @@ const OTPInput = ({ getValue, inputSize = 6 }) => {
         });
     };
 
+    const clickHandler = (event) => {
+        if (event.target.id !== `otpDigit${currentActiveIndex}`) {
+            onManualNavigate();
+        }
+    };
+
     return (
         <Stack direction="row" spacing={2} justifyContent="center">
             {values.enteredValues.map((value, index) => (
-                <StyledInput
-                    key={index}
-                    id={`otpDigit${index}`}
-                    type="tel"
-                    value={value}
-                    tabIndex={index === currentActiveIndex ? 0 : -1}
-                    onKeyDown={keyPressHandler}
-                    onBeforeInput={inputHandler}
-                    onChange={changeHandler}
-                    disabled={index !== currentActiveIndex}
-                    autoComplete="off"
-                    small={isSmallMobile}
-                />
+                <div key={index} onClick={clickHandler}>
+                    <StyledInput
+                        id={`otpDigit${index}`}
+                        type="tel"
+                        value={value}
+                        tabIndex={index === currentActiveIndex ? 0 : -1}
+                        onKeyDown={keyPressHandler}
+                        onBeforeInput={inputHandler}
+                        onChange={changeHandler}
+                        disabled={index !== currentActiveIndex}
+                        autoComplete="off"
+                        small={isSmallMobile}
+                    />
+                </div>
             ))}
         </Stack>
     );
@@ -114,5 +121,4 @@ const OTPInput = ({ getValue, inputSize = 6 }) => {
 export default OTPInput;
 
 // FIXME: allow otp copy paste
-// FIXME: manual navigation / intuitive navigation for otp fields
 // FIXME: limit otp field value to one character
