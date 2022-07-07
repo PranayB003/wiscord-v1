@@ -46,6 +46,7 @@ const OTPInput = ({ getValue, onManualNavigate, inputSize = 6 }) => {
     }, [currentActiveIndex, values, getValue]);
 
     const keyPressHandler = (event) => {
+        console.log("keypress handler");
         if (event.key === "Backspace") {
             setValues((oldState) => {
                 const newState = {
@@ -67,12 +68,14 @@ const OTPInput = ({ getValue, onManualNavigate, inputSize = 6 }) => {
     };
 
     const inputHandler = (event) => {
-        if (!isFinite(event.data) || event.data === " ") {
+        console.log("input handler");
+        if (!/^[0-9]+$/.test(event.data)) {
             event.preventDefault();
         }
     };
 
     const changeHandler = (event) => {
+        console.log("change handler");
         setValues((oldState) => {
             const newState = {
                 ...oldState,
@@ -84,9 +87,16 @@ const OTPInput = ({ getValue, onManualNavigate, inputSize = 6 }) => {
                     newState.prevActiveIndex + 1
                 );
             }
-            newState.enteredValues[newState.prevActiveIndex] =
-                newState.enteredValues[newState.prevActiveIndex] ||
-                event.target.value;
+            const inputDigits = event.target.value
+                ?.split("")
+                ?.slice(0, inputSize - newState.prevActiveIndex);
+            inputDigits?.forEach((digit) => {
+                newState.enteredValues[newState.prevActiveIndex] = digit;
+                newState.prevActiveIndex = Math.min(
+                    inputSize - 1,
+                    newState.prevActiveIndex + 1
+                );
+            });
             return newState;
         });
     };
@@ -119,6 +129,3 @@ const OTPInput = ({ getValue, onManualNavigate, inputSize = 6 }) => {
     );
 };
 export default OTPInput;
-
-// FIXME: allow otp copy paste
-// FIXME: limit otp field value to one character
