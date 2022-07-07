@@ -1,4 +1,4 @@
-import React, { useContext, useRef } from "react";
+import React, { useContext, useMemo, useRef } from "react";
 
 import {
     collection,
@@ -16,7 +16,7 @@ import { Box, Divider, Stack, styled } from "@mui/material";
 import GroupedChatMessage from "./GroupedChatMessage";
 import ChatInput from "./ChatInput";
 import FullscreenCircularLoadingIndicator from "../FullscreenCircularLoadingIndicator";
-import useAutoSrollDown from "../../hooks/useAutoScrollDown";
+import useAutoScrollDown from "../../hooks/useAutoScrollDown";
 import messageConverter from "../../utils/messageConverter";
 import groupByTimeUser from "../../utils/groupByTimeUser";
 import getFormattedDate from "../../utils/getFormattedDate";
@@ -33,9 +33,9 @@ const ContainerBox = styled(Box)(({ theme }) => ({
 
 const StyledStack = styled(Stack)(({ theme }) => ({
     flexGrow: "1",
-    overflow: "auto",
+    overflowY: "auto",
+    overflowX: "hidden",
     marginBottom: "10px",
-    paddingInline: "10px",
 }));
 
 const StyledDivider = styled(Divider)(({ theme }) => ({
@@ -61,9 +61,11 @@ const GlobalChatRoom = () => {
         limit(200)
     );
     const [data, loading] = useCollectionData(chatQuery);
-    const chatData = data ? groupByTimeUser(data.reverse()) : undefined;
+    const chatData = useMemo(() => groupByTimeUser(data?.reverse()), [data]);
 
-    const forceScrollDown = useAutoSrollDown(messageListRef, [chatData]);
+    const [ScrollDownFab, forceScrollDown] = useAutoScrollDown(messageListRef, [
+        chatData,
+    ]);
 
     const messageSubmitHandler = async (newMessage) => {
         const userPhoneNumber = auth.currentUser.phoneNumber;
@@ -123,6 +125,7 @@ const GlobalChatRoom = () => {
                         );
                     })}
             </StyledStack>
+            {data && <ScrollDownFab />}
             <Box sx={{ paddingInline: "12px" }}>
                 <ChatInput onSubmit={messageSubmitHandler} />
             </Box>

@@ -1,42 +1,59 @@
-import { useCallback, useEffect, useRef } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
+import ScrollDownFab from "../components/ScrollDownFab";
 
-const useAutoSrollDown = (containerRef, dependencies = []) => {
+const isScrolledToBottom = (element) => {
+    return (
+        element?.scrollHeight - element?.clientHeight - element?.scrollTop <= 14
+    );
+};
+
+const useAutoScrollDown = (containerRef, dependencies = []) => {
     const forceScroll = useRef(false);
+    const [displayFab, setDisplayFab] = useState(false);
 
     const container = containerRef.current;
-    let scrolledToBottom;
-    if (container) {
-        scrolledToBottom =
-            container.scrollHeight -
-                container.clientHeight -
-                container.scrollTop <=
-            5;
-        console.log(
-            container.scrollHeight -
-                container.clientHeight -
-                container.scrollTop
-        );
-    }
+    const scrolledDown = isScrolledToBottom(container);
 
-    useEffect(() => {
-        if (scrolledToBottom || forceScroll.current) {
-            const children = container.children;
-            const lastChildElement = children[children.length - 1];
-            if (lastChildElement) {
-                lastChildElement.scrollIntoView({
-                    behaviour: "smooth",
-                });
-            }
+    const scrollDownImmediate = useCallback(() => {
+        const children = container.children;
+        const lastChildElement = children[children.length - 1];
+        if (lastChildElement) {
+            lastChildElement.scrollIntoView({
+                behaviour: "smooth",
+            });
+            setDisplayFab(false);
         }
-        forceScroll.current = false;
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [scrolledToBottom, container, forceScroll, ...dependencies]);
+    }, [container]);
 
     const forceScrollDown = useCallback(() => {
         forceScroll.current = true;
     }, [forceScroll]);
 
-    return forceScrollDown;
+    useEffect(() => {
+        if (scrolledDown || forceScroll.current) {
+            scrollDownImmediate();
+        } else {
+            setDisplayFab(true);
+        }
+        forceScroll.current = false;
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [forceScroll, scrollDownImmediate, ...dependencies]);
+
+    useEffect(() => {
+        containerRef.current?.addEventListener("scroll", (event) => {
+            if (isScrolledToBottom(containerRef.current)) {
+                setDisplayFab(false);
+            }
+        });
+    }, [containerRef]);
+
+    const ScrollButton = () => {
+        return (
+            <ScrollDownFab show={displayFab} onClick={scrollDownImmediate} />
+        );
+    };
+
+    return [ScrollButton, forceScrollDown];
 };
 
-export default useAutoSrollDown;
+export default useAutoScrollDown;

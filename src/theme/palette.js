@@ -24,6 +24,7 @@ const palette = {
     disabled: {
         light: "#E7E7E7",
         main: "#A1A1A1",
+        dark: "#A1A1A1",
         contrastText: "#FFFFFF",
     },
     white: {

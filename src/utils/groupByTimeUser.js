@@ -7,7 +7,7 @@ const groupByTimeUser = (inputArray) => {
     let previousDate = null;
     let previousUid = null;
 
-    inputArray.forEach((data) => {
+    inputArray?.forEach((data) => {
         const createdAt = data.createdAt;
         const currentDate = createdAt
             ? new Date(createdAt.seconds * 1000)
