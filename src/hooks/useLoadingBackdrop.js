@@ -20,6 +20,7 @@ const useLoadingBackdrop = () => {
         return (
             <Backdrop
                 sx={{
+                    marginTop: "0 !important",
                     color: "#fff",
                     zIndex: (theme) => theme.zIndex.drawer + 1,
                 }}

@@ -1,22 +1,14 @@
 /* global grecaptcha */
 import React, { useCallback, useState } from "react";
 
-import {
-    Stack,
-    TextField,
-    InputAdornment,
-    InputBase,
-    Button,
-    Collapse,
-    Alert,
-} from "@mui/material";
+import { Stack, Button, Collapse, Alert } from "@mui/material";
 import { RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
 import useLoadingBackdrop from "../../hooks/useLoadingBackdrop";
 import getFirebaseErrorMessage from "../../utils/getFirebaseErrorMessage";
+import PhoneInput from "./PhoneInput";
 
 const LoginForm = ({ auth, setData }) => {
-    const [phoneNumber, setPhoneNumber] = useState("");
-    const [countryCode, setCountryCode] = useState("91");
+    const [phoneNumber, setPhoneNumber] = useState("+91");
     const [error, setError] = useState({ state: false, message: "" });
     const [boxKey, setBoxKey] = useState(0);
     const { toggleLoading, LoadingScreen } = useLoadingBackdrop();
@@ -35,8 +27,9 @@ const LoginForm = ({ auth, setData }) => {
         [auth]
     );
 
-    const onMobileSubmit = () => {
-        const data = "+" + countryCode.trim() + phoneNumber.trim();
+    const onMobileSubmit = (event) => {
+        event.preventDefault();
+        const data = phoneNumber.trim();
         toggleLoading();
         signInWithPhoneNumber(auth, data, window.recaptchaVerifier)
             .then((confirmationResult) => {
@@ -58,15 +51,14 @@ const LoginForm = ({ auth, setData }) => {
             });
     };
 
-    const changeHandler = (name) => (event) => {
-        if (name === "phone") setPhoneNumber(event.target.value);
-        else if (name === "countryCode") setCountryCode(event.target.value);
+    const changeHandler = (value) => {
+        setPhoneNumber(value);
     };
 
     return (
-        <form>
+        <>
             <LoadingScreen />
-            <Stack spacing={2} sx={{ justifyContent: "center" }}>
+            <Stack spacing={2}>
                 <Collapse in={error.state}>
                     <Alert
                         severity="error"
@@ -74,49 +66,22 @@ const LoginForm = ({ auth, setData }) => {
                     >
                         {error.message}
                     </Alert>
-                </Collapse>
-                <TextField
-                    label="Enter phone number"
-                    value={phoneNumber}
-                    onChange={changeHandler("phone")}
-                    InputProps={{
-                        startAdornment: (
-                            <InputAdornment
-                                position="start"
-                                sx={{
-                                    lineHeight: "1.4375em",
-                                    display: "flex",
-                                    alignItems: "center",
-                                }}
-                            >
-                                <span style={{ marginTop: "-4px" }}>+</span>
-                                <InputBase
-                                    value={countryCode}
-                                    onChange={changeHandler("countryCode")}
-                                    placeholder="XX"
-                                    sx={{
-                                        maxWidth: "2rem",
-                                        marginLeft: "2px",
-                                    }}
-                                />
-                            </InputAdornment>
-                        ),
-                    }}
-                    inputProps={{
-                        autoComplete: "off",
-                    }}
-                />
-                <div ref={setRecaptchaVerifier} key={boxKey}></div>
-                <Button
-                    variant="contained"
-                    color="secondary"
-                    size="large"
-                    onClick={onMobileSubmit}
-                >
-                    Continue
-                </Button>
+                </Collapse>{" "}
+                <Stack component="form" spacing={2}>
+                    <PhoneInput value={phoneNumber} onChange={changeHandler} />
+                    <div ref={setRecaptchaVerifier} key={boxKey}></div>
+                    <Button
+                        variant="contained"
+                        color="secondary"
+                        size="large"
+                        onClick={onMobileSubmit}
+                        type="submit"
+                    >
+                        Continue
+                    </Button>
+                </Stack>
             </Stack>
-        </form>
+        </>
     );
 };
 
