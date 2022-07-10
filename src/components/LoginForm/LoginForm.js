@@ -86,4 +86,3 @@ const LoginForm = ({ auth, setData }) => {
 };
 
 export default LoginForm;
-// FIXME: drop down for counntry codes

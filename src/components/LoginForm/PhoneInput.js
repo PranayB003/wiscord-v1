@@ -52,6 +52,7 @@ const PhoneInput = ({ onChange }) => {
             }}
             inputProps={{
                 autoComplete: "off",
+                inputMode: "numeric",
             }}
             placeholder="XXXXXXXXXX"
         />

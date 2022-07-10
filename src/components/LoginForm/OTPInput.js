@@ -46,7 +46,6 @@ const OTPInput = ({ getValue, onManualNavigate, inputSize = 6 }) => {
     }, [currentActiveIndex, values, getValue]);
 
     const keyPressHandler = (event) => {
-        console.log("keypress handler");
         if (event.key === "Backspace") {
             setValues((oldState) => {
                 const newState = {
@@ -68,14 +67,12 @@ const OTPInput = ({ getValue, onManualNavigate, inputSize = 6 }) => {
     };
 
     const inputHandler = (event) => {
-        console.log("input handler");
         if (!/^[0-9]+$/.test(event.data)) {
             event.preventDefault();
         }
     };
 
     const changeHandler = (event) => {
-        console.log("change handler");
         setValues((oldState) => {
             const newState = {
                 ...oldState,
@@ -113,6 +110,7 @@ const OTPInput = ({ getValue, onManualNavigate, inputSize = 6 }) => {
                 <div key={index} onClick={clickHandler}>
                     <StyledInput
                         id={`otpDigit${index}`}
+                        inputMode="numeric"
                         type="tel"
                         value={value}
                         tabIndex={index === currentActiveIndex ? 0 : -1}
