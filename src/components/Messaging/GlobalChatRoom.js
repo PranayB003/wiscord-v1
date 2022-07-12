@@ -87,7 +87,7 @@ const GlobalChatRoom = () => {
             {loading && (
                 <FullscreenCircularLoadingIndicator isLoading={loading} />
             )}
-            <StyledStack spacing={2} ref={messageListRef}>
+            <StyledStack spacing={2} ref={messageListRef} paddingLeft="6px">
                 {data &&
                     chatData.map((dateMessages) => {
                         const date = dateMessages[0][0].createdAt;

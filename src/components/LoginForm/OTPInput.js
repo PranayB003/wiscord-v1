@@ -31,19 +31,10 @@ const OTPInput = ({ getValue, onManualNavigate, inputSize = 6 }) => {
         prevActiveIndex: 0,
         enteredValues: Array(inputSize).fill(""),
     });
-
     let currentActiveIndex = values.prevActiveIndex;
     if (values.enteredValues[currentActiveIndex]) {
         currentActiveIndex = Math.min(inputSize - 1, currentActiveIndex + 1);
     }
-    useEffect(() => {
-        const activeInputField = document.getElementById(
-            `otpDigit${currentActiveIndex}`
-        );
-        activeInputField.focus();
-
-        getValue(values.enteredValues.join(""));
-    }, [currentActiveIndex, values, getValue]);
 
     const keyPressHandler = (event) => {
         if (event.key === "Backspace") {
@@ -103,6 +94,15 @@ const OTPInput = ({ getValue, onManualNavigate, inputSize = 6 }) => {
             onManualNavigate();
         }
     };
+
+    useEffect(() => {
+        const activeInputField = document.getElementById(
+            `otpDigit${currentActiveIndex}`
+        );
+        activeInputField.focus();
+
+        getValue(values.enteredValues.join(""));
+    }, [currentActiveIndex, values, getValue]);
 
     return (
         <Stack direction="row" spacing={2} justifyContent="center">
