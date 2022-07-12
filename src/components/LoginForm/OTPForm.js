@@ -10,6 +10,7 @@ import {
 } from "@mui/material";
 import OTPInput from "./OTPInput";
 import getFirebaseErrorMessage from "../../utils/getFirebaseErrorMessage";
+import updateFirestoreUser from "../../functions/updateFirestoreUser";
 
 const OTPForm = () => {
     const [otp, setOtp] = useState("");
@@ -19,7 +20,8 @@ const OTPForm = () => {
     const confirmHandler = async () => {
         setLoading(true);
         try {
-            await window.confirmationResult.confirm(otp);
+            const result = await window.confirmationResult.confirm(otp);
+            await updateFirestoreUser(result.user);
         } catch (err) {
             console.error(err);
             let message = getFirebaseErrorMessage(err);
