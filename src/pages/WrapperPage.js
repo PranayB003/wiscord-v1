@@ -4,6 +4,7 @@ import { FirebaseContext } from "../App";
 import { signOut } from "firebase/auth";
 
 import { Stack, styled } from "@mui/material";
+import useMediaQuery from "@mui/material/useMediaQuery";
 import { CgProfile } from "react-icons/cg";
 import { IoPower } from "react-icons/io5";
 
@@ -25,6 +26,7 @@ const MainContentStack = styled(Stack)(({ theme }) => ({
 }));
 
 const WrapperPage = () => {
+    const isMobile = useMediaQuery("(max-width:770px)");
     const { auth } = useContext(FirebaseContext);
     const [sideBarOpen, setSideBarOpen] = useState(false);
     const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
@@ -68,6 +70,8 @@ const WrapperPage = () => {
                     open={sideBarOpen}
                     onOpen={openSideBar}
                     onClose={closeSideBar}
+                    isMobile={isMobile}
+                    sideBarWidth="260"
                 />
                 <MainContentStack>
                     <TopAppBar
@@ -75,6 +79,8 @@ const WrapperPage = () => {
                         title="Global Chat"
                         onMenuOpen={openSideBar}
                         accountOptions={accountOptions}
+                        isMobile={isMobile}
+                        sideBarWidth="260"
                     />
                     <GlobalChatRoom />
                 </MainContentStack>

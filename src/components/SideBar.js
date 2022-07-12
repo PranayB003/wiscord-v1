@@ -1,34 +1,45 @@
 import React from "react";
 
 import { Box, Drawer, styled, SwipeableDrawer } from "@mui/material";
-import useMediaQuery from "@mui/material/useMediaQuery";
 
 const StyledBox = styled(Box)(({ theme }) => ({
-    backgroundColor: theme.palette.background.gray,
-    minWidth: "200px",
-    maxWidth: "280px",
-    borderTopLeftRadius: "10px",
-    borderTopRightRadius: "10px",
+    backgroundColor: theme.palette.background.darkestGray,
+    // width: "260px",
+    height: "100%",
 }));
 
 const ModalProps = {
     keepMounted: true,
 };
 
-const SideBar = ({ open, onOpen, onClose }) => {
-    const isMobile = useMediaQuery("(max-width:600px)");
+const SideBar = ({ open, onOpen, onClose, isMobile, sideBarWidth }) => {
+    const iOS =
+        typeof navigator !== "undefined" &&
+        /iPad|iPhone|iPod/.test(navigator.userAgent);
 
-    // return <StyledBox></StyledBox>;
+    const sideContent = (
+        <StyledBox sx={{ width: `${sideBarWidth}px` }}>hehe</StyledBox>
+    );
+
     return isMobile ? (
         <SwipeableDrawer
-            anchor="left"
             open={open}
             onOpen={onOpen}
             onClose={onClose}
+            disableDiscovery={true}
+            disableBackdropTransition={!iOS}
             ModalProps={ModalProps}
-        />
+        >
+            {sideContent}
+        </SwipeableDrawer>
     ) : (
-        <Drawer variant="permanent" anchor="left" ModalProps={ModalProps} />
+        <Drawer
+            variant="permanent"
+            ModalProps={ModalProps}
+            sx={{ "& .MuiPaper-root": { position: "static" } }}
+        >
+            {sideContent}
+        </Drawer>
     );
 };
 

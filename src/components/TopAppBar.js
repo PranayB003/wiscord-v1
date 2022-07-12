@@ -14,11 +14,16 @@ import {
     Avatar,
     Tooltip,
 } from "@mui/material";
-import useMediaQuery from "@mui/material/useMediaQuery";
 import { FiMenu } from "react-icons/fi";
-const TopAppBar = ({ auth, title, onMenuOpen, accountOptions }) => {
+const TopAppBar = ({
+    auth,
+    title,
+    onMenuOpen,
+    accountOptions,
+    isMobile,
+    sideBarWidth,
+}) => {
     const [anchorElUser, setAnchorElUser] = useState(null);
-    const isMobile = useMediaQuery("(max-width:600px)");
 
     const handleOpenUserMenu = (event) => {
         setAnchorElUser(event.currentTarget);
@@ -29,7 +34,13 @@ const TopAppBar = ({ auth, title, onMenuOpen, accountOptions }) => {
 
     return (
         <>
-            <AppBar position="fixed" sx={{ borderTopLeftRadius: "10px" }}>
+            <AppBar
+                position="fixed"
+                sx={{
+                    width: isMobile ? "100%" : `calc(100% - ${sideBarWidth}px)`,
+                    ml: isMobile ? "0" : `${sideBarWidth}px`,
+                }}
+            >
                 <Container maxWidth="xl">
                     <Toolbar disableGutters>
                         {isMobile && (
@@ -60,6 +71,10 @@ const TopAppBar = ({ auth, title, onMenuOpen, accountOptions }) => {
                                 fontFamily: "monospace",
                                 fontWeight: 700,
                                 color: "inherit",
+                                textAlign: {
+                                    xs: "left",
+                                    sm: "center",
+                                },
                             }}
                         >
                             {title}
