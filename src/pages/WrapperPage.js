@@ -4,12 +4,11 @@ import { FirebaseContext } from "../App";
 import { signOut } from "firebase/auth";
 
 import { Stack, styled } from "@mui/material";
-// import useMediaQuery from "@mui/material/useMediaQuery";
 import { CgProfile } from "react-icons/cg";
 import { IoPower } from "react-icons/io5";
 
 import GlobalChatRoom from "../components/Messaging/GlobalChatRoom";
-// import SideBar from "../components/SideBar";
+import SideBar from "../components/SideBar";
 import TopAppBar from "../components/TopAppBar";
 import ConfirmDialog from "../components/Dialogs/ConfirmDialog";
 import ProfileSettingsDialog from "../components/Dialogs/ProfileSettings/ProfileSettingsDialog";
@@ -26,11 +25,17 @@ const MainContentStack = styled(Stack)(({ theme }) => ({
 }));
 
 const WrapperPage = () => {
-    // const isMobile = useMediaQuery("(max-width:600px)");
     const { auth } = useContext(FirebaseContext);
-    // const [sideBarOpen, setSideBarOpen] = useState(false);
+    const [sideBarOpen, setSideBarOpen] = useState(false);
     const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
     const [profileDialogOpen, setProfileDialogOpen] = useState(false);
+
+    const openSideBar = () => {
+        setSideBarOpen(true);
+    };
+    const closeSideBar = () => {
+        setSideBarOpen(false);
+    };
 
     const toggleProfileDialog = () => {
         setProfileDialogOpen((value) => !value);
@@ -58,23 +63,17 @@ const WrapperPage = () => {
 
     return (
         <>
-            {/* {isMobile && (
-                <Backdrop
-                    open={sideBarOpen}
-                    onClick={() => setSideBarOpen(false)}
-                >
-                    <SideBar />
-                </Backdrop>
-            )} */}
             <WrapperStack direction="row">
-                {/* {!isMobile && <SideBar />} */}
+                <SideBar
+                    open={sideBarOpen}
+                    onOpen={openSideBar}
+                    onClose={closeSideBar}
+                />
                 <MainContentStack>
                     <TopAppBar
                         auth={auth}
                         title="Global Chat"
-                        onMenuOpen={() => {
-                            // setSideBarOpen(true)
-                        }}
+                        onMenuOpen={openSideBar}
                         accountOptions={accountOptions}
                     />
                     <GlobalChatRoom />

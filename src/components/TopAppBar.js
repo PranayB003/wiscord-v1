@@ -14,9 +14,11 @@ import {
     Avatar,
     Tooltip,
 } from "@mui/material";
-// import { FiMenu } from "react-icons/fi";
+import useMediaQuery from "@mui/material/useMediaQuery";
+import { FiMenu } from "react-icons/fi";
 const TopAppBar = ({ auth, title, onMenuOpen, accountOptions }) => {
     const [anchorElUser, setAnchorElUser] = useState(null);
+    const isMobile = useMediaQuery("(max-width:600px)");
 
     const handleOpenUserMenu = (event) => {
         setAnchorElUser(event.currentTarget);
@@ -30,23 +32,25 @@ const TopAppBar = ({ auth, title, onMenuOpen, accountOptions }) => {
             <AppBar position="fixed" sx={{ borderTopLeftRadius: "10px" }}>
                 <Container maxWidth="xl">
                     <Toolbar disableGutters>
-                        {/* <Box
-                        sx={{
-                            flexGrow: 1,
-                            display: { xs: "flex", sm: "none" },
-                        }}
-                    >
-                        <IconButton
-                            size="large"
-                            aria-label="account of current user"
-                            aria-controls="menu-appbar"
-                            aria-haspopup="true"
-                            onClick={onMenuOpen}
-                            color="inherit"
-                        >
-                            <FiMenu />
-                        </IconButton>
-                    </Box> */}
+                        {isMobile && (
+                            <Box
+                                sx={{
+                                    flexGrow: 1,
+                                    display: { xs: "flex", sm: "none" },
+                                }}
+                            >
+                                <IconButton
+                                    size="large"
+                                    aria-label="account of current user"
+                                    aria-controls="menu-appbar"
+                                    aria-haspopup="true"
+                                    onClick={onMenuOpen}
+                                    color="inherit"
+                                >
+                                    <FiMenu />
+                                </IconButton>
+                            </Box>
+                        )}
                         <Typography
                             variant="h6"
                             noWrap
