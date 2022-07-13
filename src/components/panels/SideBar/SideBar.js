@@ -14,7 +14,26 @@ import ContactCard from "./ContactCard";
 
 const StyledBox = styled(Box)(({ theme }) => ({
     backgroundColor: theme.palette.background.darkestGray,
-    height: "100%",
+    height: "100vh",
+    display: "flex",
+    flexDirection: "column",
+    overflowY: "hidden",
+
+    // ScrollBar
+    "&": {
+        scrollbarWidth: "thin",
+        scrollbarColor: "rgb(113, 113, 113) transparent",
+    },
+    "& *::-webkit-scrollbar": {
+        width: "2px",
+    },
+    "& *::-webkit-scrollbar-track": {
+        background: "transparent",
+    },
+    "& *::-webkit-scrollbar-thumb": {
+        backgroundColor: "rgb(80, 80, 80)",
+        borderRadius: "0px",
+    },
 }));
 
 const ModalProps = {
@@ -49,9 +68,22 @@ const SideBar = ({ open, onOpen, onClose, isMobile, sideBarWidth }) => {
                 </Toolbar>
             </AppBar>
             {isMobile && <Toolbar />}
-            <Box padding="10px">
+            <Box
+                padding="10px"
+                flexGrow={1}
+                display="flex"
+                flexDirection="column"
+                maxHeight="85vh"
+            >
                 <ContactSearch />
-                <Box marginTop="13px"></Box>
+                <Box
+                    marginTop="13px"
+                    flexGrow={1}
+                    overflow="auto"
+                    paddingRight="2px"
+                >
+                    <ContactCard user={{}} />
+                </Box>
             </Box>
         </StyledBox>
     );

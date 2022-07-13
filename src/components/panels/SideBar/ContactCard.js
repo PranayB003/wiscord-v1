@@ -6,7 +6,7 @@ const StyledContainer = styled(Stack)(({ theme }) => ({
     borderRadius: "5px",
     backgroundColor: theme.palette.background.gray,
     "&:hover": {
-        backgroundColor: theme.palette.background.darkGray,
+        backgroundColor: theme.palette.background.lighterGray,
     },
 }));
 
