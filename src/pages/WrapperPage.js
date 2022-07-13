@@ -104,5 +104,6 @@ const WrapperPage = () => {
 };
 
 export default WrapperPage;
+// todo: force user to input displayName if not done already
 // todo: DM UI
 // todo: indicator for currently active chat

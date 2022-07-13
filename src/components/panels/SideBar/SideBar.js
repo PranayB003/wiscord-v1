@@ -219,4 +219,3 @@ const SideBar = ({
 };
 
 export default SideBar;
-// todo: get previously active DMs
