@@ -20,13 +20,14 @@ import ProfileTitleBar from "./ProfileTitleBar";
 import ProfileDetails from "./ProfileDetails";
 import ConfirmDialog from "../ConfirmDialog";
 import getFirebaseErrorMessage from "../../../utils/getFirebaseErrorMessage";
+import { deleteDoc, doc } from "firebase/firestore";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
 });
 
 const ProfileSettingsDialog = ({ open, onClose, onLogout }) => {
-    const { auth, storage } = useContext(FirebaseContext);
+    const { auth, storage, db } = useContext(FirebaseContext);
     const [error, setError] = useState(false);
     const [loading, setLoading] = useState(false);
     const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
@@ -44,6 +45,7 @@ const ProfileSettingsDialog = ({ open, onClose, onLogout }) => {
         setLoading(true);
         try {
             deleteObject(profileImageRef);
+            await deleteDoc(doc(db, "users", auth.currentUser.uid));
             await deleteUser(auth.currentUser);
         } catch (error) {
             console.error(error);

@@ -5,6 +5,7 @@ import { Box, styled, Stack } from "@mui/material";
 import ProfileDetailItem from "./ProfileDetailItem";
 import ProfilePhotoDetail from "./ProfilePhotoDetail";
 import getFirebaseErrorMessage from "../../../utils/getFirebaseErrorMessage";
+import updateFirestoreUser from "../../../functions/updateFirestoreUser";
 
 const DarkBox = styled(Box)(({ theme }) => ({
     backgroundColor: theme.palette.background.darkerGray,
@@ -46,15 +47,20 @@ const ProfileDetails = ({ auth, onError }) => {
     const { photoURL, displayName, phoneNumber, email } = auth.currentUser;
     const details = [
         {
-            name: "Username",
+            name: "Display Name",
             value: displayName,
             type: "text",
             editable: true,
             updateHandler: (newDisplayName) => {
-                updateProfile({
-                    displayName: newDisplayName,
-                    photoURL: photoURL,
-                });
+                return Promise.all([
+                    updateProfile({
+                        displayName: newDisplayName,
+                        photoURL: photoURL,
+                    }),
+                    updateFirestoreUser(auth.currentUser.uid, {
+                        displayName: newDisplayName,
+                    }),
+                ]);
             },
         },
         {
@@ -68,7 +74,7 @@ const ProfileDetails = ({ auth, onError }) => {
         },
         {
             name: "Phone Number",
-            value: `${phoneNumber.slice(0, 3)} ${phoneNumber.slice(3)}`,
+            value: phoneNumber,
             type: "tel",
             editable: false,
         },
@@ -81,10 +87,15 @@ const ProfileDetails = ({ auth, onError }) => {
                 photoURL={photoURL}
                 loading={updating}
                 updateHandler={(newPhotoURL) => {
-                    return updateProfile({
-                        displayName: displayName,
-                        photoURL: newPhotoURL,
-                    });
+                    return Promise.all([
+                        updateProfile({
+                            displayName: displayName,
+                            photoURL: newPhotoURL,
+                        }),
+                        updateFirestoreUser(auth.currentUser.uid, {
+                            photoURL: newPhotoURL,
+                        }),
+                    ]);
                 }}
             />
             <StyledStack>

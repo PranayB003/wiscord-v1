@@ -4,13 +4,13 @@ import { FirebaseContext } from "../App";
 import { signOut } from "firebase/auth";
 
 import { Stack, styled } from "@mui/material";
-// import useMediaQuery from "@mui/material/useMediaQuery";
+import useMediaQuery from "@mui/material/useMediaQuery";
 import { CgProfile } from "react-icons/cg";
 import { IoPower } from "react-icons/io5";
 
 import GlobalChatRoom from "../components/Messaging/GlobalChatRoom";
-// import SideBar from "../components/SideBar";
-import TopAppBar from "../components/TopAppBar";
+import SideBar from "../components/panels/SideBar/SideBar";
+import TopAppBar from "../components/panels/TopAppBar";
 import ConfirmDialog from "../components/Dialogs/ConfirmDialog";
 import ProfileSettingsDialog from "../components/Dialogs/ProfileSettings/ProfileSettingsDialog";
 
@@ -26,11 +26,18 @@ const MainContentStack = styled(Stack)(({ theme }) => ({
 }));
 
 const WrapperPage = () => {
-    // const isMobile = useMediaQuery("(max-width:600px)");
+    const isMobile = useMediaQuery("(max-width:770px)");
     const { auth } = useContext(FirebaseContext);
-    // const [sideBarOpen, setSideBarOpen] = useState(false);
+    const [sideBarOpen, setSideBarOpen] = useState(false);
     const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
     const [profileDialogOpen, setProfileDialogOpen] = useState(false);
+
+    const openSideBar = () => {
+        setSideBarOpen(true);
+    };
+    const closeSideBar = () => {
+        setSideBarOpen(false);
+    };
 
     const toggleProfileDialog = () => {
         setProfileDialogOpen((value) => !value);
@@ -58,24 +65,22 @@ const WrapperPage = () => {
 
     return (
         <>
-            {/* {isMobile && (
-                <Backdrop
-                    open={sideBarOpen}
-                    onClick={() => setSideBarOpen(false)}
-                >
-                    <SideBar />
-                </Backdrop>
-            )} */}
             <WrapperStack direction="row">
-                {/* {!isMobile && <SideBar />} */}
+                <SideBar
+                    open={sideBarOpen}
+                    onOpen={openSideBar}
+                    onClose={closeSideBar}
+                    isMobile={isMobile}
+                    sideBarWidth="260"
+                />
                 <MainContentStack>
                     <TopAppBar
                         auth={auth}
                         title="Global Chat"
-                        onMenuOpen={() => {
-                            // setSideBarOpen(true)
-                        }}
+                        onMenuOpen={openSideBar}
                         accountOptions={accountOptions}
+                        isMobile={isMobile}
+                        sideBarWidth="260"
                     />
                     <GlobalChatRoom />
                 </MainContentStack>
@@ -99,3 +104,5 @@ const WrapperPage = () => {
 };
 
 export default WrapperPage;
+// todo: DM UI
+// todo: indicator for currently active chat

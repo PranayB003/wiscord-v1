@@ -14,8 +14,15 @@ import {
     Avatar,
     Tooltip,
 } from "@mui/material";
-// import { FiMenu } from "react-icons/fi";
-const TopAppBar = ({ auth, title, onMenuOpen, accountOptions }) => {
+import { FiMenu } from "react-icons/fi";
+const TopAppBar = ({
+    auth,
+    title,
+    onMenuOpen,
+    accountOptions,
+    isMobile,
+    sideBarWidth,
+}) => {
     const [anchorElUser, setAnchorElUser] = useState(null);
 
     const handleOpenUserMenu = (event) => {
@@ -27,26 +34,34 @@ const TopAppBar = ({ auth, title, onMenuOpen, accountOptions }) => {
 
     return (
         <>
-            <AppBar position="fixed" sx={{ borderTopLeftRadius: "10px" }}>
+            <AppBar
+                position="fixed"
+                sx={{
+                    width: isMobile ? "100%" : `calc(100% - ${sideBarWidth}px)`,
+                    ml: isMobile ? "0" : `${sideBarWidth}px`,
+                }}
+            >
                 <Container maxWidth="xl">
                     <Toolbar disableGutters>
-                        {/* <Box
-                        sx={{
-                            flexGrow: 1,
-                            display: { xs: "flex", sm: "none" },
-                        }}
-                    >
-                        <IconButton
-                            size="large"
-                            aria-label="account of current user"
-                            aria-controls="menu-appbar"
-                            aria-haspopup="true"
-                            onClick={onMenuOpen}
-                            color="inherit"
-                        >
-                            <FiMenu />
-                        </IconButton>
-                    </Box> */}
+                        {isMobile && (
+                            <Box
+                                sx={{
+                                    flexGrow: 1,
+                                    display: { xs: "flex", sm: "none" },
+                                }}
+                            >
+                                <IconButton
+                                    size="large"
+                                    aria-label="account of current user"
+                                    aria-controls="menu-appbar"
+                                    aria-haspopup="true"
+                                    onClick={onMenuOpen}
+                                    color="inherit"
+                                >
+                                    <FiMenu />
+                                </IconButton>
+                            </Box>
+                        )}
                         <Typography
                             variant="h6"
                             noWrap
@@ -56,6 +71,10 @@ const TopAppBar = ({ auth, title, onMenuOpen, accountOptions }) => {
                                 fontFamily: "monospace",
                                 fontWeight: 700,
                                 color: "inherit",
+                                textAlign: {
+                                    xs: "left",
+                                    sm: "center",
+                                },
                             }}
                         >
                             {title}
