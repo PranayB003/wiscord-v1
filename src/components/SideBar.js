@@ -44,3 +44,5 @@ const SideBar = ({ open, onOpen, onClose, isMobile, sideBarWidth }) => {
 };
 
 export default SideBar;
+// todo: search bar UI
+// todo: search results UI

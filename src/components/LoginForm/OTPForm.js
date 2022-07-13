@@ -21,7 +21,12 @@ const OTPForm = () => {
         setLoading(true);
         try {
             const result = await window.confirmationResult.confirm(otp);
-            await updateFirestoreUser(result.user);
+            await updateFirestoreUser(result.user.uid, {
+                uid: result.user.uid,
+                phoneNumber: result.user.phoneNumber,
+                photoURL: result.user.photoURL,
+                displayName: result.user.displayName,
+            });
         } catch (err) {
             console.error(err);
             let message = getFirebaseErrorMessage(err);
