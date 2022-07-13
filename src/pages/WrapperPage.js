@@ -9,8 +9,8 @@ import { CgProfile } from "react-icons/cg";
 import { IoPower } from "react-icons/io5";
 
 import GlobalChatRoom from "../components/Messaging/GlobalChatRoom";
-import SideBar from "../components/SideBar";
-import TopAppBar from "../components/TopAppBar";
+import SideBar from "../components/panels/SideBar/SideBar";
+import TopAppBar from "../components/panels/TopAppBar";
 import ConfirmDialog from "../components/Dialogs/ConfirmDialog";
 import ProfileSettingsDialog from "../components/Dialogs/ProfileSettings/ProfileSettingsDialog";
 
@@ -104,3 +104,5 @@ const WrapperPage = () => {
 };
 
 export default WrapperPage;
+// todo: DM UI
+// todo: indicator for currently active chat

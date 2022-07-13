@@ -16,8 +16,9 @@ const palette = {
         contrastText: "#FFFFFF",
     },
     background: {
-        lightGray: "rgb(54, 57, 64)",
+        lighterGray: "rgb(66, 70, 77)",
         gray: "rgb(59, 59, 61)",
+        darkGray: "rgb(54, 57, 58)",
         darkerGray: "rgb(33, 34, 37)",
         darkestGray: "rgb(30, 30, 30)",
     },
