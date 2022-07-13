@@ -1,10 +1,11 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useCallback } from "react";
 
 import {
     AppBar,
     Box,
     Drawer,
     LinearProgress,
+    Stack,
     styled,
     SwipeableDrawer,
     Toolbar,
@@ -53,21 +54,37 @@ const SideBar = ({
     db,
 }) => {
     const [searchString, setSearchString] = useState("");
-    const [loading, setLoading] = useState(false);
-    const [conversations, setConversations] = useState(undefined);
+    const [searchLoading, setSearchLoading] = useState(false);
     const [searchResults, setSearchResults] = useState(undefined);
     const searchTimer = useRef(null);
+    const [convLoading, setConvLoading] = useState(true);
+    const [conversations, setConversations] = useState(undefined);
 
-    console.log("RESULTS 👍", searchResults);
+    const convQueryHandler = useCallback(async () => {
+        setConvLoading(true);
+        try {
+            const data = await getConversations();
+            setConversations(data);
+        } catch (error) {
+            console.error(error);
+        } finally {
+            setConvLoading(false);
+        }
+    }, []);
 
     const changeHandler = (event) => {
         setSearchString(event.target.value);
     };
-    const clearHandler = () => {
+    const clearHandler = useCallback(() => {
         setSearchString("");
-        setLoading(false);
+        setSearchLoading(false);
         setSearchResults(undefined);
-    };
+        convQueryHandler();
+    }, [convQueryHandler]);
+
+    useEffect(() => {
+        convQueryHandler();
+    }, [convQueryHandler]);
 
     useEffect(() => {
         if (searchTimer.current) {
@@ -76,28 +93,27 @@ const SideBar = ({
         let outdated = false;
 
         if (searchString.trim()) {
-            console.log("sending request");
-            setLoading(true);
+            setSearchLoading(true);
             searchTimer.current = setTimeout(async () => {
                 try {
                     const result = await searchUsers(searchString);
                     if (!outdated) {
                         setSearchResults(result.docs.map((doc) => doc.data()));
-                        setLoading(false);
+                        setSearchLoading(false);
                     }
                 } catch (error) {
+                    clearHandler();
                     console.error(error);
                 }
             }, 500);
         } else {
-            setSearchResults(undefined);
-            setLoading(false);
+            clearHandler();
         }
 
         return () => {
             outdated = true;
         };
-    }, [searchTimer, searchString]);
+    }, [searchTimer, searchString, clearHandler]);
 
     const Content = (
         <StyledBox width={`${sideBarWidth}px`}>
@@ -134,18 +150,19 @@ const SideBar = ({
                     onChange={changeHandler}
                     onClear={clearHandler}
                 />
-                <Box
+                <Stack
                     marginTop="13px"
                     flexGrow={1}
                     overflow="auto"
                     paddingRight="2px"
+                    spacing="5px"
                 >
-                    {loading ? (
+                    {searchLoading ? (
                         <LinearProgress />
                     ) : searchResults ? (
                         searchResults.length > 0 ? (
                             searchResults.map((user) => (
-                                <ContactCard user={user} />
+                                <ContactCard key={user.uid} user={user} />
                             ))
                         ) : (
                             <Typography width="100%" textAlign="center">
@@ -153,9 +170,24 @@ const SideBar = ({
                             </Typography>
                         )
                     ) : (
-                        <Typography>Convos</Typography>
+                        <>
+                            {convLoading && <LinearProgress />}
+                            {conversations?.length > 0 &&
+                                conversations.map((convo) => (
+                                    <ContactCard
+                                        key={convo.user.uid}
+                                        user={convo.user}
+                                    />
+                                ))}
+                            {!convLoading && !conversations?.length && (
+                                <Typography>
+                                    Start a conversation by searching for users
+                                    using their display name.
+                                </Typography>
+                            )}
+                        </>
                     )}
-                </Box>
+                </Stack>
             </Box>
         </StyledBox>
     );

@@ -74,7 +74,7 @@ const ProfileDetails = ({ auth, onError }) => {
         },
         {
             name: "Phone Number",
-            value: `${phoneNumber.slice(0, 3)} ${phoneNumber.slice(3)}`,
+            value: phoneNumber,
             type: "tel",
             editable: false,
         },

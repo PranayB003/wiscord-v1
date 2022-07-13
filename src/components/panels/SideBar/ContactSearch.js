@@ -21,9 +21,11 @@ const ContactSearch = ({ value, onChange, onClear }) => {
             onChange={onChange}
             startAdornment={<BsSearch />}
             endAdornment={
-                <IconButton onClick={onClear}>
-                    <IoIosClose />
-                </IconButton>
+                value && (
+                    <IconButton onClick={onClear}>
+                        <IoIosClose />
+                    </IconButton>
+                )
             }
         />
     );

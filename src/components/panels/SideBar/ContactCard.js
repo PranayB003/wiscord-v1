@@ -18,7 +18,6 @@ const ContactCard = ({ user }) => {
             alignItems="center"
             paddingY="5px"
             paddingX="7px"
-            marginBottom="3px"
         >
             <Avatar
                 alt={user.displayName}
