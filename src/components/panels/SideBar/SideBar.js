@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useState, useRef, useEffect } from "react";
 
 import {
     AppBar,
     Box,
     Drawer,
+    LinearProgress,
     styled,
     SwipeableDrawer,
     Toolbar,
@@ -11,6 +12,8 @@ import {
 } from "@mui/material";
 import ContactSearch from "./ContactSearch";
 import ContactCard from "./ContactCard";
+import searchUsers from "./../../../functions/searchUsers";
+import getConversations from "./../../../functions/getConversations";
 
 const StyledBox = styled(Box)(({ theme }) => ({
     backgroundColor: theme.palette.background.darkestGray,
@@ -40,10 +43,61 @@ const ModalProps = {
     keepMounted: true,
 };
 
-const SideBar = ({ open, onOpen, onClose, isMobile, sideBarWidth }) => {
-    const iOS =
-        typeof navigator !== "undefined" &&
-        /iPad|iPhone|iPod/.test(navigator.userAgent);
+const SideBar = ({
+    open,
+    onOpen,
+    onClose,
+    isMobile,
+    sideBarWidth,
+    uid,
+    db,
+}) => {
+    const [searchString, setSearchString] = useState("");
+    const [loading, setLoading] = useState(false);
+    const [conversations, setConversations] = useState(undefined);
+    const [searchResults, setSearchResults] = useState(undefined);
+    const searchTimer = useRef(null);
+
+    console.log("RESULTS 👍", searchResults);
+
+    const changeHandler = (event) => {
+        setSearchString(event.target.value);
+    };
+    const clearHandler = () => {
+        setSearchString("");
+        setLoading(false);
+        setSearchResults(undefined);
+    };
+
+    useEffect(() => {
+        if (searchTimer.current) {
+            clearTimeout(searchTimer.current);
+        }
+        let outdated = false;
+
+        if (searchString.trim()) {
+            console.log("sending request");
+            setLoading(true);
+            searchTimer.current = setTimeout(async () => {
+                try {
+                    const result = await searchUsers(searchString);
+                    if (!outdated) {
+                        setSearchResults(result.docs.map((doc) => doc.data()));
+                        setLoading(false);
+                    }
+                } catch (error) {
+                    console.error(error);
+                }
+            }, 500);
+        } else {
+            setSearchResults(undefined);
+            setLoading(false);
+        }
+
+        return () => {
+            outdated = true;
+        };
+    }, [searchTimer, searchString]);
 
     const Content = (
         <StyledBox width={`${sideBarWidth}px`}>
@@ -75,18 +129,40 @@ const SideBar = ({ open, onOpen, onClose, isMobile, sideBarWidth }) => {
                 flexDirection="column"
                 maxHeight="85vh"
             >
-                <ContactSearch />
+                <ContactSearch
+                    value={searchString}
+                    onChange={changeHandler}
+                    onClear={clearHandler}
+                />
                 <Box
                     marginTop="13px"
                     flexGrow={1}
                     overflow="auto"
                     paddingRight="2px"
                 >
-                    <ContactCard user={{}} />
+                    {loading ? (
+                        <LinearProgress />
+                    ) : searchResults ? (
+                        searchResults.length > 0 ? (
+                            searchResults.map((user) => (
+                                <ContactCard user={user} />
+                            ))
+                        ) : (
+                            <Typography width="100%" textAlign="center">
+                                No users found.
+                            </Typography>
+                        )
+                    ) : (
+                        <Typography>Convos</Typography>
+                    )}
                 </Box>
             </Box>
         </StyledBox>
     );
+
+    const iOS =
+        typeof navigator !== "undefined" &&
+        /iPad|iPhone|iPod/.test(navigator.userAgent);
 
     return isMobile ? (
         <SwipeableDrawer
@@ -111,5 +187,4 @@ const SideBar = ({ open, onOpen, onClose, isMobile, sideBarWidth }) => {
 };
 
 export default SideBar;
-// todo: search functionality
 // todo: get previously active DMs

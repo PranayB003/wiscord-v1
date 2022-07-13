@@ -1,7 +1,8 @@
-import React, { useRef, useState } from "react";
+import React from "react";
 
-import { FilledInput, styled } from "@mui/material";
+import { FilledInput, IconButton, styled } from "@mui/material";
 import { BsSearch } from "react-icons/bs";
+import { IoIosClose } from "react-icons/io";
 
 const StyledSearchBox = styled(FilledInput)(({ theme }) => ({
     "& .MuiFilledInput-input": {
@@ -11,21 +12,19 @@ const StyledSearchBox = styled(FilledInput)(({ theme }) => ({
     width: "100%",
 }));
 
-const ContactSearch = () => {
-    const [searchString, setSearchString] = useState("");
-    const timer = useRef(null);
-
-    const changeHandler = (event) => {
-        setSearchString(event.target.value);
-    };
-
+const ContactSearch = ({ value, onChange, onClear }) => {
     return (
         <StyledSearchBox
             disableUnderline
             placeholder="Search..."
-            value={searchString}
-            onChange={changeHandler}
+            value={value}
+            onChange={onChange}
             startAdornment={<BsSearch />}
+            endAdornment={
+                <IconButton onClick={onClear}>
+                    <IoIosClose />
+                </IconButton>
+            }
         />
     );
 };
