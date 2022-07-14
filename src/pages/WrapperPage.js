@@ -64,6 +64,8 @@ const WrapperPage = () => {
         },
     ];
 
+    const sideBarWidth = 320;
+
     return (
         <>
             <WrapperStack direction="row">
@@ -72,7 +74,7 @@ const WrapperPage = () => {
                     onOpen={openSideBar}
                     onClose={closeSideBar}
                     isMobile={isMobile}
-                    sideBarWidth="320"
+                    width={sideBarWidth}
                 />
                 <MainContentStack>
                     <TopAppBar
@@ -81,7 +83,7 @@ const WrapperPage = () => {
                         onMenuOpen={openSideBar}
                         accountOptions={accountOptions}
                         isMobile={isMobile}
-                        sideBarWidth="320"
+                        sideBarWidth={sideBarWidth}
                     />
                     <GlobalChatRoom />
                 </MainContentStack>
