@@ -13,6 +13,7 @@ import SideBar from "../components/panels/SideBar/SideBar";
 import TopAppBar from "../components/panels/TopAppBar";
 import ConfirmDialog from "../components/Dialogs/ConfirmDialog";
 import ProfileSettingsDialog from "../components/Dialogs/ProfileSettings/ProfileSettingsDialog";
+import DisplayNameInput from "../components/Dialogs/ProfileSettings/DisplayNameInput";
 
 const WrapperStack = styled(Stack)(({ theme }) => ({
     backgroundColor: theme.palette.background.darkerGray,
@@ -85,6 +86,7 @@ const WrapperPage = () => {
                     <GlobalChatRoom />
                 </MainContentStack>
             </WrapperStack>
+            <DisplayNameInput auth={auth} />
             <ConfirmDialog
                 open={confirmDialogOpen}
                 onClose={toggleLogoutDialog}

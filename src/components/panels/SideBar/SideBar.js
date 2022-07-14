@@ -44,15 +44,7 @@ const ModalProps = {
     keepMounted: true,
 };
 
-const SideBar = ({
-    open,
-    onOpen,
-    onClose,
-    isMobile,
-    sideBarWidth,
-    uid,
-    db,
-}) => {
+const SideBar = ({ open, onOpen, onClose, isMobile, sideBarWidth }) => {
     const [searchString, setSearchString] = useState("");
     const [searchLoading, setSearchLoading] = useState(false);
     const [searchResults, setSearchResults] = useState(undefined);

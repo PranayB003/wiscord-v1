@@ -52,6 +52,10 @@ const ProfileDetails = ({ auth, onError }) => {
             type: "text",
             editable: true,
             updateHandler: (newDisplayName) => {
+                if (!newDisplayName.trim()) {
+                    onError("display name cannot be empty");
+                    return;
+                }
                 return Promise.all([
                     updateProfile({
                         displayName: newDisplayName,
