@@ -72,7 +72,7 @@ const WrapperPage = () => {
                     onOpen={openSideBar}
                     onClose={closeSideBar}
                     isMobile={isMobile}
-                    sideBarWidth="260"
+                    sideBarWidth="320"
                 />
                 <MainContentStack>
                     <TopAppBar
@@ -81,7 +81,7 @@ const WrapperPage = () => {
                         onMenuOpen={openSideBar}
                         accountOptions={accountOptions}
                         isMobile={isMobile}
-                        sideBarWidth="260"
+                        sideBarWidth="320"
                     />
                     <GlobalChatRoom />
                 </MainContentStack>
@@ -106,6 +106,5 @@ const WrapperPage = () => {
 };
 
 export default WrapperPage;
-// todo: force user to input displayName if not done already
 // todo: DM UI with indicator for currently active chat
 // todo: navigation between DMs and Global Chat
