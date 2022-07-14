@@ -34,9 +34,7 @@ const ConfirmDialog = ({
             <DialogActions>
                 <Button onClick={onClose}>No</Button>
                 <Button
-                    onClick={() => {
-                        onConfirm();
-                    }}
+                    onClick={onConfirm}
                     autoFocus
                     variant="contained"
                     color="error"

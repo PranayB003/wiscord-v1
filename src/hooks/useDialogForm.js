@@ -1,14 +1,7 @@
 import React, { useState } from "react";
 
-import {
-    Button,
-    TextField,
-    Dialog,
-    DialogActions,
-    DialogContent,
-    DialogContentText,
-    DialogTitle,
-} from "@mui/material";
+import { Button } from "@mui/material";
+import InputDialog from "../components/Dialogs/InputDialog";
 
 const useDialogForm = (
     title = "Form Title",
@@ -40,41 +33,73 @@ const useDialogForm = (
         };
 
         return (
-            <Dialog open={open} onClose={closeDialogForm}>
-                {title && <DialogTitle>{title}</DialogTitle>}
-                <DialogContent>
-                    {body && <DialogContentText>{body}</DialogContentText>}
-                    <TextField
-                        autoFocus
-                        margin="dense"
-                        id={label}
-                        label={label}
-                        type={type}
-                        fullWidth
-                        variant="standard"
-                        value={value}
-                        onChange={changeHandler}
-                    />
-                </DialogContent>
-                <DialogActions>
-                    <Button
-                        onClick={() => {
-                            closeDialogForm();
-                            cancelHandler();
-                        }}
-                    >
-                        Cancel
-                    </Button>
-                    <Button
-                        onClick={() => {
-                            continueHandler(value);
-                            closeDialogForm();
-                        }}
-                    >
-                        Continue
-                    </Button>
-                </DialogActions>
-            </Dialog>
+            <InputDialog
+                open={open}
+                onClose={closeDialogForm}
+                onChange={changeHandler}
+                title={title}
+                body={body}
+                input={{
+                    label: label,
+                    value: value,
+                    type: type,
+                }}
+                actions={
+                    <>
+                        <Button
+                            onClick={() => {
+                                closeDialogForm();
+                                cancelHandler();
+                            }}
+                        >
+                            Cancel
+                        </Button>
+                        <Button
+                            onClick={() => {
+                                continueHandler(value);
+                                closeDialogForm();
+                            }}
+                        >
+                            Continue
+                        </Button>
+                    </>
+                }
+            />
+            // <Dialog open={open} onClose={closeDialogForm}>
+            //     {title && <DialogTitle>{title}</DialogTitle>}
+            //     <DialogContent>
+            //         {body && <DialogContentText>{body}</DialogContentText>}
+            //         <TextField
+            //             autoFocus
+            //             margin="dense"
+            //             id={label}
+            //             label={label}
+            //             type={type}
+            //             fullWidth
+            //             variant="standard"
+            //             value={value}
+            //             onChange={changeHandler}
+            //         />
+            //     </DialogContent>
+            //     <DialogActions>
+            // <Button
+            //     onClick={() => {
+            //         closeDialogForm();
+            //         cancelHandler();
+            //     }}
+            // >
+            //     Cancel
+            // </Button>
+            // <Button
+            //     onClick={() => {
+            //         continueHandler(value);
+            //         closeDialogForm();
+            //     }}
+            // >
+            //     Continue
+            // </Button>
+            //     </DialogActions>
+            // </Dialog>
         );
     };
 
