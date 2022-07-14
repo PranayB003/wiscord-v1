@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import React from "react";
 
 import { styled, Box, AppBar, Toolbar, Typography } from "@mui/material";
 import DMContent from "./DMContent";
-import GlobalContent from "./GlobalContent";
+// import GlobalContent from "./GlobalContent";
 
 const MainPanelBox = styled(Box)(({ theme }) => ({
     backgroundColor: theme.palette.background.darkestGray,
@@ -29,8 +29,6 @@ const MainPanelBox = styled(Box)(({ theme }) => ({
 }));
 
 const MainPanel = ({ category, isMobile, width, leftOffset }) => {
-    const [selected, setSelected] = useState("");
-
     return (
         <MainPanelBox width={width}>
             <AppBar
@@ -66,8 +64,8 @@ const MainPanel = ({ category, isMobile, width, leftOffset }) => {
                 flexDirection="column"
                 maxHeight="85vh"
             >
-                {/* <DMPanelContent /> */}
-                <GlobalContent />
+                <DMContent />
+                {/* <GlobalContent /> */}
             </Box>
         </MainPanelBox>
     );

@@ -72,10 +72,7 @@ const GlobalChatRoom = () => {
         const newDocData = {
             body: newMessage,
             createdAt: serverTimestamp(),
-            phoneNumber: `${userPhoneNumber.slice(
-                0,
-                3
-            )} ${userPhoneNumber.slice(3, 11)}XX`,
+            phoneNumber: `${userPhoneNumber.slice(0, -2)}XX`,
             uid: auth.currentUser.uid,
         };
         forceScrollDown();
@@ -101,7 +98,8 @@ const GlobalChatRoom = () => {
                                     timeUserMessages[0].uid ===
                                     auth.currentUser.uid
                                         ? "me"
-                                        : timeUserMessages[0].phoneNumber;
+                                        : timeUserMessages[0].displayName ||
+                                          timeUserMessages[0].phoneNumber;
 
                                 return (
                                     <GroupedChatMessage

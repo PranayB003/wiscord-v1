@@ -13,18 +13,18 @@ const CategoryPanelStack = styled(Stack, {
     alignItems: "center",
 }));
 
-const CategoryPanel = ({ width, onChange }) => {
+const CategoryPanel = ({ width }) => {
     return (
         <CategoryPanelStack width={width} spacing="1px">
             <IconButton
                 sx={{ height: `${width - 4}px`, width: `${width - 4}px` }}
-                onClick={() => onChange("Global Server")}
+                onClick={() => {}}
             >
                 <FaGlobeAsia />
             </IconButton>
             <IconButton
                 sx={{ height: `${width - 4}px`, width: `${width - 4}px` }}
-                onClick={() => onChange("Direct Messaging")}
+                onClick={() => {}}
             >
                 <BsChatDotsFill />
             </IconButton>

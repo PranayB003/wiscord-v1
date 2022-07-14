@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 
 import { Box, Drawer, SwipeableDrawer } from "@mui/material";
 import MainPanel from "./MainPanel";
@@ -9,8 +9,6 @@ const ModalProps = {
 };
 
 const SideBar = ({ open, onOpen, onClose, isMobile, width }) => {
-    const [category, setCategory] = useState("Global Server");
-
     const categoryPanelWidth = 50;
     const mainPanelWidth = isMobile
         ? `calc(100vw - 100px)`
@@ -18,9 +16,9 @@ const SideBar = ({ open, onOpen, onClose, isMobile, width }) => {
 
     const Content = (
         <Box display="flex">
-            <CategoryPanel width={categoryPanelWidth} onChange={setCategory} />
+            <CategoryPanel width={categoryPanelWidth} />
             <MainPanel
-                category={category}
+                category={"Direct Messaging"}
                 isMobile={isMobile}
                 width={mainPanelWidth}
                 leftOffset={categoryPanelWidth}

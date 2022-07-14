@@ -4,10 +4,7 @@ const messageConverter = {
         const data = snapshot.data(options);
         return {
             id: snapshot.id,
-            body: data.body,
-            createdAt: data.createdAt,
-            phoneNumber: data.phoneNumber,
-            uid: data.uid,
+            ...data,
         };
     },
 };
