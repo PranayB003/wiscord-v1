@@ -4,7 +4,7 @@ import { styled, Box, AppBar, Toolbar, Typography } from "@mui/material";
 import DMContent from "./DMContent";
 // import GlobalContent from "./GlobalContent";
 
-const MainPanelBox = styled(Box)(({ theme }) => ({
+const ChannelPanelBox = styled(Box)(({ theme }) => ({
     backgroundColor: theme.palette.background.darkestGray,
     height: "100vh",
     display: "flex",
@@ -28,9 +28,9 @@ const MainPanelBox = styled(Box)(({ theme }) => ({
     },
 }));
 
-const MainPanel = ({ category, isMobile, width, leftOffset }) => {
+const ChannelPanel = ({ category, isMobile, width, leftOffset }) => {
     return (
-        <MainPanelBox width={width}>
+        <ChannelPanelBox width={width}>
             <AppBar
                 position="fixed"
                 sx={{
@@ -67,8 +67,8 @@ const MainPanel = ({ category, isMobile, width, leftOffset }) => {
                 <DMContent />
                 {/* <GlobalContent /> */}
             </Box>
-        </MainPanelBox>
+        </ChannelPanelBox>
     );
 };
 
-export default MainPanel;
+export default ChannelPanel;

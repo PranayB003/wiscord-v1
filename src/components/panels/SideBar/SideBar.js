@@ -1,27 +1,27 @@
 import React from "react";
 
 import { Box, Drawer, SwipeableDrawer } from "@mui/material";
-import MainPanel from "./MainPanel";
-import CategoryPanel from "./CategoryPanel";
+import ChannelPanel from "./ChannelPanel";
+import ServerPanel from "./ServerPanel";
 
 const ModalProps = {
     keepMounted: true,
 };
 
 const SideBar = ({ open, onOpen, onClose, isMobile, width }) => {
-    const categoryPanelWidth = 50;
-    const mainPanelWidth = isMobile
+    const serverPanelWidth = 50;
+    const channelPanelWidth = isMobile
         ? `calc(100vw - 100px)`
-        : `${width - categoryPanelWidth}px`;
+        : `${width - serverPanelWidth}px`;
 
     const Content = (
         <Box display="flex">
-            <CategoryPanel width={categoryPanelWidth} />
-            <MainPanel
+            <ServerPanel width={serverPanelWidth} />
+            <ChannelPanel
                 category={"Direct Messaging"}
                 isMobile={isMobile}
-                width={mainPanelWidth}
-                leftOffset={categoryPanelWidth}
+                width={channelPanelWidth}
+                leftOffset={serverPanelWidth}
             />
         </Box>
     );
