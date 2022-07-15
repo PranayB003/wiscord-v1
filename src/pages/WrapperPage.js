@@ -8,9 +8,10 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import { CgProfile } from "react-icons/cg";
 import { IoPower } from "react-icons/io5";
 
-import GlobalChatRoom from "../components/Messaging/GlobalChatRoom";
+import { ChatContextProvider } from "../hooks/useChatRoom";
 import SideBar from "../components/panels/SideBar/SideBar";
 import TopAppBar from "../components/panels/TopAppBar";
+import GlobalChatRoom from "../components/Messaging/GlobalChatRoom";
 import ConfirmDialog from "../components/Dialogs/ConfirmDialog";
 import ProfileSettingsDialog from "../components/Dialogs/ProfileSettings/ProfileSettingsDialog";
 import DisplayNameInput from "../components/Dialogs/ProfileSettings/DisplayNameInput";
@@ -67,7 +68,7 @@ const WrapperPage = () => {
     const sideBarWidth = 320;
 
     return (
-        <>
+        <ChatContextProvider>
             <WrapperStack direction="row">
                 <SideBar
                     open={sideBarOpen}
@@ -103,7 +104,7 @@ const WrapperPage = () => {
                 onClose={toggleProfileDialog}
                 onLogout={toggleLogoutDialog}
             />
-        </>
+        </ChatContextProvider>
     );
 };
 

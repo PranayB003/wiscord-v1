@@ -1,25 +1,29 @@
-import React, { useContext, useReducer } from "react";
+import React, { useReducer, useContext } from "react";
 
 import { auth, db } from "../App";
 import { collection } from "firebase/firestore";
 import messageConverter from "../utils/messageConverter";
 
-const globalChatRef = collection(db, "globalChat").withConverter(
-    messageConverter
-);
-const initialState = {
-    server: {
-        id: "global",
-        name: "Global Server",
-    },
-    channel: {
-        id: "chatroom",
-        name: "Global Chat",
-    },
-    chat: {
-        collectionRef: globalChatRef,
-        senderID: `${auth.currentUser.phoneNumber.slice(0, -2)}XX`,
-    },
+const initFunction = ({ auth, db }) => {
+    const globalChatRef = collection(db, "globalChat").withConverter(
+        messageConverter
+    );
+    const phoneNumber = `${auth.currentUser.phoneNumber.slice(0, -2)}XX`;
+
+    return {
+        server: {
+            id: "__global__",
+            name: "Global Server",
+        },
+        channel: {
+            id: "chatroom",
+            name: "Global Chat",
+        },
+        chat: {
+            collectionRef: globalChatRef,
+            senderID: phoneNumber,
+        },
+    };
 };
 
 const chatReducer = (oldState, action) => {
@@ -30,13 +34,9 @@ const chatReducer = (oldState, action) => {
         const server = action.payload.server;
         if (server.id === oldState.server.id) {
             return oldState;
-        } else if (server.id === "global") {
+        } else if (server.id === "__global__") {
             return {
-                ...initialState,
-                chat: {
-                    collectionRef: globalChatRef,
-                    senderID: phoneNumber,
-                },
+                ...initFunction({ auth, db }),
             };
         } else {
             return {
@@ -74,12 +74,16 @@ const chatReducer = (oldState, action) => {
     }
 };
 
-const ChatRoomContext = React.createContext(initialState);
+export const ChatRoomContext = React.createContext();
 export const ChatContextProvider = (props) => {
-    const [state, dispatch] = useReducer(chatReducer, initialState);
+    const [state, dispatch] = useReducer(
+        chatReducer,
+        { auth, db },
+        initFunction
+    );
 
     return (
-        <ChatRoomContext.Provider value={{ state, dispatch }}>
+        <ChatRoomContext.Provider value={[state, dispatch]}>
             {props.children}
         </ChatRoomContext.Provider>
     );
