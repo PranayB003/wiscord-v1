@@ -18,7 +18,6 @@ const SideBar = ({ open, onOpen, onClose, isMobile, width }) => {
         <Box display="flex">
             <ServerPanel width={serverPanelWidth} />
             <ChannelPanel
-                category={"Direct Messaging"}
                 isMobile={isMobile}
                 width={channelPanelWidth}
                 leftOffset={serverPanelWidth}

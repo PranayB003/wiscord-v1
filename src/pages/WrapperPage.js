@@ -11,7 +11,7 @@ import { IoPower } from "react-icons/io5";
 import { ChatContextProvider } from "../hooks/useChatRoom";
 import SideBar from "../components/panels/SideBar/SideBar";
 import TopAppBar from "../components/panels/TopAppBar";
-import GlobalChatRoom from "../components/Messaging/GlobalChatRoom";
+import ChatRoom from "../components/Messaging/ChatRoom";
 import ConfirmDialog from "../components/Dialogs/ConfirmDialog";
 import ProfileSettingsDialog from "../components/Dialogs/ProfileSettings/ProfileSettingsDialog";
 import DisplayNameInput from "../components/Dialogs/ProfileSettings/DisplayNameInput";
@@ -29,7 +29,7 @@ const MainContentStack = styled(Stack)(({ theme }) => ({
 
 const WrapperPage = () => {
     const isMobile = useMediaQuery("(max-width:770px)");
-    const { auth } = useContext(FirebaseContext);
+    const { auth, db } = useContext(FirebaseContext);
     const [sideBarOpen, setSideBarOpen] = useState(false);
     const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
     const [profileDialogOpen, setProfileDialogOpen] = useState(false);
@@ -80,13 +80,12 @@ const WrapperPage = () => {
                 <MainContentStack>
                     <TopAppBar
                         auth={auth}
-                        title="Global Chat"
                         onMenuOpen={openSideBar}
                         accountOptions={accountOptions}
                         isMobile={isMobile}
                         sideBarWidth={sideBarWidth}
                     />
-                    <GlobalChatRoom />
+                    <ChatRoom currentUID={auth.currentUser.uid} db={db} />
                 </MainContentStack>
             </WrapperStack>
             <DisplayNameInput auth={auth} />

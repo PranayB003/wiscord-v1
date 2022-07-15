@@ -1,8 +1,9 @@
 import React from "react";
 
 import { styled, Box, AppBar, Toolbar, Typography } from "@mui/material";
+import useChatRoom from "../../../hooks/useChatRoom";
 import DMContent from "./DMContent";
-// import GlobalContent from "./GlobalContent";
+import GlobalContent from "./GlobalContent";
 
 const ChannelPanelBox = styled(Box)(({ theme }) => ({
     backgroundColor: theme.palette.background.darkestGray,
@@ -28,7 +29,14 @@ const ChannelPanelBox = styled(Box)(({ theme }) => ({
     },
 }));
 
-const ChannelPanel = ({ category, isMobile, width, leftOffset }) => {
+const defaultChannels = {
+    __global__: <GlobalContent />,
+    __direct__: <DMContent />,
+};
+
+const ChannelPanel = ({ isMobile, width, leftOffset }) => {
+    const [state, dispatch] = useChatRoom();
+
     return (
         <ChannelPanelBox width={width}>
             <AppBar
@@ -52,7 +60,7 @@ const ChannelPanel = ({ category, isMobile, width, leftOffset }) => {
                             textAlign: "center",
                         }}
                     >
-                        {category}
+                        {state.server.name}
                     </Typography>
                 </Toolbar>
             </AppBar>
@@ -64,8 +72,7 @@ const ChannelPanel = ({ category, isMobile, width, leftOffset }) => {
                 flexDirection="column"
                 maxHeight="85vh"
             >
-                <DMContent />
-                {/* <GlobalContent /> */}
+                {defaultChannels[state.server.id]}
             </Box>
         </ChannelPanelBox>
     );

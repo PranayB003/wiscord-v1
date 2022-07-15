@@ -15,7 +15,7 @@ const StyledTextField = styled(TextField)(({ theme }) => ({
     },
 }));
 
-const ChatInput = ({ onSubmit }) => {
+const ChatInput = ({ onSubmit, disabled = false }) => {
     const [message, setMessage] = useState("");
 
     const changeHandler = (event) => {
@@ -50,6 +50,7 @@ const ChatInput = ({ onSubmit }) => {
                             size="large"
                             color="disabled"
                             onClick={submitHandler}
+                            disabled={disabled}
                         >
                             <BsFillArrowUpCircleFill />
                         </IconButton>
@@ -61,6 +62,7 @@ const ChatInput = ({ onSubmit }) => {
             value={message}
             onChange={changeHandler}
             onKeyDown={keyDownHandler}
+            disabled={disabled}
         />
     );
 };

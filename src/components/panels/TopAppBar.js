@@ -15,14 +15,16 @@ import {
     Tooltip,
 } from "@mui/material";
 import { FiMenu } from "react-icons/fi";
+import useChatRoom from "../../hooks/useChatRoom";
+
 const TopAppBar = ({
     auth,
-    title,
     onMenuOpen,
     accountOptions,
     isMobile,
     sideBarWidth,
 }) => {
+    const [state] = useChatRoom();
     const [anchorElUser, setAnchorElUser] = useState(null);
 
     const handleOpenUserMenu = (event) => {
@@ -77,7 +79,7 @@ const TopAppBar = ({
                                 },
                             }}
                         >
-                            {title}
+                            {state.channel.name}
                         </Typography>
                         <Box sx={{ flexGrow: 0 }}>
                             <Tooltip title="Options">

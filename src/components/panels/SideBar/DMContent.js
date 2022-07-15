@@ -106,10 +106,7 @@ const DMContent = () => {
                                 />
                             ))}
                         {!convLoading && !conversations?.length && (
-                            <Typography>
-                                Start a conversation by searching for users
-                                using their display name.
-                            </Typography>
+                            <Typography>No conversations to show.</Typography>
                         )}
                     </>
                 )}

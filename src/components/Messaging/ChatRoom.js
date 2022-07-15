@@ -1,23 +1,22 @@
-import React, { useContext, useMemo, useRef } from "react";
+import React, { useMemo, useRef } from "react";
 
 import {
-    collection,
     addDoc,
     serverTimestamp,
     query,
     orderBy,
     limit,
+    collection,
 } from "firebase/firestore";
 import { useCollectionData } from "react-firebase-hooks/firestore";
-import { FirebaseContext } from "../../App";
 
 import { Box, Divider, Stack, styled } from "@mui/material";
 
+import useChatRoom from "../../hooks/useChatRoom";
 import GroupedChatMessage from "./GroupedChatMessage";
 import ChatInput from "./ChatInput";
 import FullscreenCircularLoadingIndicator from "../FullscreenCircularLoadingIndicator";
 import useAutoScrollDown from "../../hooks/useAutoScrollDown";
-import messageConverter from "../../utils/messageConverter";
 import groupByTimeUser from "../../utils/groupByTimeUser";
 import getFormattedDate from "../../utils/getFormattedDate";
 import sameDayOfYear from "../../utils/sameDayOfYear";
@@ -48,18 +47,12 @@ const StyledDivider = styled(Divider)(({ theme }) => ({
     },
 }));
 
-const GlobalChatRoom = () => {
-    const { db, auth } = useContext(FirebaseContext);
+const ChatRoom = ({ currentUID, db }) => {
+    const [state] = useChatRoom();
     const messageListRef = useRef(null);
 
-    const globalChatRef = collection(db, "globalChat").withConverter(
-        messageConverter
-    );
-    const chatQuery = query(
-        globalChatRef,
-        orderBy("createdAt", "desc"),
-        limit(200)
-    );
+    const chatRef = state.chat.collectionRef || collection(db, "botDMs");
+    const chatQuery = query(chatRef, orderBy("createdAt", "desc"), limit(200));
     const [data, loading] = useCollectionData(chatQuery);
     const chatData = useMemo(() => groupByTimeUser(data?.reverse()), [data]);
 
@@ -68,15 +61,14 @@ const GlobalChatRoom = () => {
     ]);
 
     const messageSubmitHandler = async (newMessage) => {
-        const userPhoneNumber = auth.currentUser.phoneNumber;
         const newDocData = {
             body: newMessage,
             createdAt: serverTimestamp(),
-            phoneNumber: `${userPhoneNumber.slice(0, -2)}XX`,
-            uid: auth.currentUser.uid,
+            senderID: state.chat.senderID,
+            uid: currentUID,
         };
         forceScrollDown();
-        await addDoc(globalChatRef, newDocData);
+        await addDoc(chatRef, newDocData);
     };
 
     return (
@@ -95,10 +87,9 @@ const GlobalChatRoom = () => {
                         const messagesJSX = dateMessages.map(
                             (timeUserMessages) => {
                                 const sender =
-                                    timeUserMessages[0].uid ===
-                                    auth.currentUser.uid
+                                    timeUserMessages[0].uid === currentUID
                                         ? "me"
-                                        : timeUserMessages[0].displayName ||
+                                        : timeUserMessages[0].senderID ||
                                           timeUserMessages[0].phoneNumber;
 
                                 return (
@@ -125,10 +116,13 @@ const GlobalChatRoom = () => {
             </StyledStack>
             {data && <ScrollDownFab />}
             <Box sx={{ paddingInline: "12px" }}>
-                <ChatInput onSubmit={messageSubmitHandler} />
+                <ChatInput
+                    onSubmit={messageSubmitHandler}
+                    disabled={!state.chat.collectionRef}
+                />
             </Box>
         </ContainerBox>
     );
 };
 
-export default GlobalChatRoom;
+export default ChatRoom;
