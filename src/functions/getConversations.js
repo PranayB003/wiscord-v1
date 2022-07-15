@@ -40,7 +40,7 @@ const getConversations = async () => {
                 } else {
                     userData = {
                         uid: convData.uidTo,
-                        displayName: "[DELETED USER]",
+                        displayName: "[deleted user]",
                     };
                 }
                 resolve({

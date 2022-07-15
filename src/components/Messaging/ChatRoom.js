@@ -64,9 +64,11 @@ const ChatRoom = ({ currentUID, db }) => {
         const newDocData = {
             body: newMessage,
             createdAt: serverTimestamp(),
-            senderID: state.chat.senderID,
             uid: currentUID,
         };
+        if (state.chat.showSender) {
+            newDocData.senderID = state.chat.senderID;
+        }
         forceScrollDown();
         await addDoc(chatRef, newDocData);
     };

@@ -102,6 +102,7 @@ const DMContent = () => {
                             conversations.map((convo) => (
                                 <ContactCard
                                     key={convo.user.uid}
+                                    convID={convo.convID}
                                     user={convo.user}
                                 />
                             ))}

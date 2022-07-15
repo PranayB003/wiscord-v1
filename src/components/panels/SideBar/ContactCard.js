@@ -1,23 +1,49 @@
-import React from "react";
+import React, { useContext } from "react";
 
-import { Stack, Avatar, Typography, styled } from "@mui/material";
+import { collection } from "firebase/firestore";
+import { FirebaseContext } from "../../../App";
 
-const StyledContainer = styled(Stack)(({ theme }) => ({
+import { Avatar, Typography, styled, Button } from "@mui/material";
+import useChatRoom from "../../../hooks/useChatRoom";
+
+const CardContainer = styled(Button, {
+    shouldForwardProp: (prop) => prop !== "active",
+})(({ theme, active }) => ({
+    columnGap: "10px",
+    alignItems: "center",
+    justifyContent: "flex-start",
     borderRadius: "5px",
-    backgroundColor: theme.palette.background.gray,
-    "&:hover": {
-        backgroundColor: theme.palette.background.lighterGray,
-    },
+    backgroundColor: active ? theme.palette.background.gray : "transparent",
 }));
 
-const ContactCard = ({ user }) => {
+const ContactCard = ({ user, convID }) => {
+    const { db } = useContext(FirebaseContext);
+    const [state, dispatch] = useChatRoom();
+
+    const clickHandler = () => {
+        const collectionRef = convID
+            ? collection(db, "directMessages", convID, "messages")
+            : null;
+
+        dispatch({
+            type: "channel",
+            payload: {
+                channel: {
+                    id: user.uid,
+                    name: user.displayName,
+                },
+                chat: {
+                    collectionRef: collectionRef,
+                },
+            },
+        });
+    };
+
     return (
-        <StyledContainer
-            direction="row"
-            spacing={1.5}
-            alignItems="center"
-            paddingY="5px"
-            paddingX="7px"
+        <CardContainer
+            fullWidth
+            onClick={clickHandler}
+            active={state.channel.id === user.uid}
         >
             <Avatar
                 alt={user.displayName}
@@ -30,10 +56,11 @@ const ContactCard = ({ user }) => {
                 whiteSpace="nowrap"
                 overflow="hidden"
                 textOverflow="ellipsis"
+                textTransform="none"
             >
                 {user.displayName || user.phoneNumber}
             </Typography>
-        </StyledContainer>
+        </CardContainer>
     );
 };
 

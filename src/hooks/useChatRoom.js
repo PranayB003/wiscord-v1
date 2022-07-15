@@ -22,6 +22,7 @@ const initFunction = ({ auth, db }) => {
         chat: {
             collectionRef: globalChatRef,
             senderID: phoneNumber,
+            showSender: true,
         },
     };
 };
@@ -48,6 +49,7 @@ const chatReducer = (oldState, action) => {
                 chat: {
                     collectionRef: undefined,
                     senderID: undefined,
+                    showSender: false,
                 },
             };
         }
@@ -60,11 +62,15 @@ const chatReducer = (oldState, action) => {
                 server: oldState.server,
                 channel,
                 chat: {
-                    collectionRef: action.payload.chat.collectionRef,
+                    collectionRef:
+                        action.payload.chat.collectionRef?.withConverter(
+                            messageConverter
+                        ),
                     senderID:
-                        oldState.server.id === "global"
+                        oldState.server.id === "__global__"
                             ? phoneNumber
                             : displayName,
+                    showSender: action.payload.chat.showSender || false,
                 },
             };
         }
