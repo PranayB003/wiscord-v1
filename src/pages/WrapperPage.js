@@ -108,5 +108,3 @@ const WrapperPage = () => {
 };
 
 export default WrapperPage;
-// todo: DM UI with indicator for currently active chat
-// todo: navigation between DMs and Global Chat
