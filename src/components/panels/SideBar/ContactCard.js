@@ -1,9 +1,15 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 
-import { collection } from "firebase/firestore";
+import { addDoc, collection } from "firebase/firestore";
 import { FirebaseContext } from "../../../App";
 
-import { Avatar, Typography, styled, Button } from "@mui/material";
+import {
+    Avatar,
+    Typography,
+    styled,
+    Button,
+    LinearProgress,
+} from "@mui/material";
 import useChatRoom from "../../../hooks/useChatRoom";
 
 const CardContainer = styled(Button, {
@@ -16,21 +22,42 @@ const CardContainer = styled(Button, {
     backgroundColor: active ? theme.palette.background.gray : "transparent",
 }));
 
-const ContactCard = ({ user, convID }) => {
-    const { db } = useContext(FirebaseContext);
+const ContactCard = ({ user, convID, selected, onClick }) => {
+    const { auth, db } = useContext(FirebaseContext);
     const [state, dispatch] = useChatRoom();
+    const [loading, setLoading] = useState(false);
 
-    const clickHandler = () => {
-        const collectionRef = convID
+    const clickHandler = async () => {
+        onClick(user.uid);
+        let collectionRef = convID
             ? collection(db, "directMessages", convID, "messages")
             : null;
+
+        if (!collectionRef) {
+            setLoading(true);
+            try {
+                const docRef = await addDoc(collection(db, "directMessages"), {
+                    participants: [auth.currentUser.uid, user.uid],
+                });
+                collectionRef = collection(docRef, "messages");
+            } catch (error) {
+                console.error(error);
+            } finally {
+                setLoading(false);
+            }
+        }
+
+        if (selected() !== user.uid) {
+            return;
+        }
 
         dispatch({
             type: "channel",
             payload: {
+                server: state.server,
                 channel: {
                     id: user.uid,
-                    name: user.displayName,
+                    name: `@${user.displayName?.trim()?.replace(/ /g, "_")}`,
                 },
                 chat: {
                     collectionRef: collectionRef,
@@ -44,6 +71,7 @@ const ContactCard = ({ user, convID }) => {
             fullWidth
             onClick={clickHandler}
             active={state.channel.id === user.uid}
+            disabled={loading}
         >
             <Avatar
                 alt={user.displayName}
@@ -59,6 +87,7 @@ const ContactCard = ({ user, convID }) => {
                 textTransform="none"
             >
                 {user.displayName || user.phoneNumber}
+                {loading && <LinearProgress />}
             </Typography>
         </CardContainer>
     );

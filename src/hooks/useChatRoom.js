@@ -54,7 +54,13 @@ const chatReducer = (oldState, action) => {
             };
         }
     } else if (action.type === "channel") {
-        const channel = action.payload.channel;
+        const { server, channel, chat } = action.payload;
+
+        // stale channel change dispatch
+        if (server.id !== oldState.server.id) {
+            return oldState;
+        }
+
         if (channel.id === oldState.channel.id) {
             return oldState;
         } else {
@@ -63,14 +69,13 @@ const chatReducer = (oldState, action) => {
                 channel,
                 chat: {
                     collectionRef:
-                        action.payload.chat.collectionRef?.withConverter(
-                            messageConverter
-                        ),
+                        chat.collectionRef?.withConverter(messageConverter),
                     senderID:
-                        oldState.server.id === "__global__"
+                        chat.senderID ||
+                        (oldState.server.id === "__global__"
                             ? phoneNumber
-                            : displayName,
-                    showSender: action.payload.chat.showSender || false,
+                            : displayName),
+                    showSender: chat.showSender || false,
                 },
             };
         }

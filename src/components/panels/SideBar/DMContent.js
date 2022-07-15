@@ -14,6 +14,19 @@ const DMContent = () => {
     const [convLoading, setConvLoading] = useState(true);
     const [conversations, setConversations] = useState(undefined);
 
+    const chat = useRef(null);
+    const setChatRef = (value) => {
+        chat.current = value;
+    };
+    const getChatRef = () => {
+        return chat.current;
+    };
+
+    let convIDmap = {};
+    conversations?.forEach((convo) => {
+        convIDmap[convo.user.uid] = convo.convID;
+    });
+
     const convQueryHandler = useCallback(async () => {
         setConvLoading(true);
         try {
@@ -87,9 +100,19 @@ const DMContent = () => {
                     <LinearProgress />
                 ) : searchResults ? (
                     searchResults.length > 0 ? (
-                        searchResults.map((user) => (
-                            <ContactCard key={user.uid} user={user} />
-                        ))
+                        convLoading ? (
+                            <LinearProgress />
+                        ) : (
+                            searchResults.map((user) => (
+                                <ContactCard
+                                    key={user.uid}
+                                    convID={convIDmap[user.uid]}
+                                    user={user}
+                                    selected={getChatRef}
+                                    onClick={setChatRef}
+                                />
+                            ))
+                        )
                     ) : (
                         <Typography width="100%" textAlign="center">
                             No users found.
@@ -104,6 +127,8 @@ const DMContent = () => {
                                     key={convo.user.uid}
                                     convID={convo.convID}
                                     user={convo.user}
+                                    selected={getChatRef}
+                                    onClick={setChatRef}
                                 />
                             ))}
                         {!convLoading && !conversations?.length && (
