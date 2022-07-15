@@ -35,7 +35,7 @@ const defaultChannels = {
 };
 
 const ChannelPanel = ({ isMobile, width, leftOffset }) => {
-    const [state, dispatch] = useChatRoom();
+    const [state] = useChatRoom();
 
     return (
         <ChannelPanelBox width={width}>
