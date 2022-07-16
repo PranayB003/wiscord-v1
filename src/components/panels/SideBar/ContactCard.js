@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useRef, useState } from "react";
 
 import { addDoc, collection } from "firebase/firestore";
 import { FirebaseContext } from "../../../App";
@@ -26,20 +26,20 @@ const ContactCard = ({ user, convID, selected, onClick }) => {
     const { auth, db } = useContext(FirebaseContext);
     const [state, dispatch] = useChatRoom();
     const [loading, setLoading] = useState(false);
+    const collectionRef = useRef(
+        convID ? collection(db, "directMessages", convID, "messages") : null
+    );
 
     const clickHandler = async () => {
         onClick(user.uid);
-        let collectionRef = convID
-            ? collection(db, "directMessages", convID, "messages")
-            : null;
 
-        if (!collectionRef) {
+        if (!collectionRef.current) {
             setLoading(true);
             try {
                 const docRef = await addDoc(collection(db, "directMessages"), {
                     participants: [auth.currentUser.uid, user.uid],
                 });
-                collectionRef = collection(docRef, "messages");
+                collectionRef.current = collection(docRef, "messages");
             } catch (error) {
                 console.error(error);
             } finally {
@@ -60,7 +60,7 @@ const ContactCard = ({ user, convID, selected, onClick }) => {
                     name: `@${user.displayName?.trim()?.replace(/ /g, "_")}`,
                 },
                 chat: {
-                    collectionRef: collectionRef,
+                    collectionRef: collectionRef.current,
                 },
             },
         });
