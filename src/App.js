@@ -46,3 +46,10 @@ function App() {
 }
 
 export default App;
+
+// fixme: disallow alphabets and other characters in phone number input
+// todo: reply/reference to a particular message
+// todo: send pictures and videos
+// todo: simple group chat, and servers with channels
+// todo: emoji input, using an embedded button in messageInput as well as using the colon syntax
+// todo: italics, bold etc (kind of like rich text editing)
