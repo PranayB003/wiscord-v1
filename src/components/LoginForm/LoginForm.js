@@ -1,3 +1,4 @@
+// The comment below is necessary to remove warnings
 /* global grecaptcha */
 import React, { useCallback, useState } from "react";
 

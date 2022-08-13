@@ -14,9 +14,6 @@ const GlobalContent = () => {
     return (
         <>
             <Stack spacing="2px">
-                {/* <StyledButton fullWidth>
-                    <Typography lineHeight={1.1}>#Introduction</Typography>
-                </StyledButton> */}
                 <StyledButton fullWidth active={true}>
                     <Typography lineHeight={1.1}>#Global_Chat</Typography>
                 </StyledButton>
