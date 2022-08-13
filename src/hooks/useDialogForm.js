@@ -65,41 +65,6 @@ const useDialogForm = (
                     </>
                 }
             />
-            // <Dialog open={open} onClose={closeDialogForm}>
-            //     {title && <DialogTitle>{title}</DialogTitle>}
-            //     <DialogContent>
-            //         {body && <DialogContentText>{body}</DialogContentText>}
-            //         <TextField
-            //             autoFocus
-            //             margin="dense"
-            //             id={label}
-            //             label={label}
-            //             type={type}
-            //             fullWidth
-            //             variant="standard"
-            //             value={value}
-            //             onChange={changeHandler}
-            //         />
-            //     </DialogContent>
-            //     <DialogActions>
-            // <Button
-            //     onClick={() => {
-            //         closeDialogForm();
-            //         cancelHandler();
-            //     }}
-            // >
-            //     Cancel
-            // </Button>
-            // <Button
-            //     onClick={() => {
-            //         continueHandler(value);
-            //         closeDialogForm();
-            //     }}
-            // >
-            //     Continue
-            // </Button>
-            //     </DialogActions>
-            // </Dialog>
         );
     };
 
